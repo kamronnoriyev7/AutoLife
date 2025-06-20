@@ -24,23 +24,21 @@ public class AppDbContext : DbContext
     public DbSet<Image> Photos { get; set; } = default!;
     public DbSet<ParkingPrice> ParkingPrices { get; set; } = default!;
     public DbSet<AppFeedback> AppFeedbacks { get; set; } = default!;
-    public DbSet<FavoriteStation> FavoriteStations { get; set; } = default!;
+    public DbSet<Favorite> Favorites { get; set; } = default!;
     public DbSet<FuelHistory> FuelHistories { get; set; } = default!;
     public DbSet<FuelStation> FuelStations { get; set; } = default!;
+    public DbSet<FuelSubType> FuelSubTypes { get; set; }
     public DbSet<GeoLocation> GeoLocations { get; set; } = default!;
     public DbSet<Image> Images { get; set; } = default!;
     public DbSet<News> News { get; set; } = default!;
     public DbSet<Notification> Notifications { get; set; } = default!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
-    public DbSet<ServiceBooking> ServiceBookings { get; set; } = default!;
     public DbSet<ServiceCenter> ServiceCenters { get; set; } = default!;
-    public DbSet<ServiceReview> ServiceReviews { get; set; } = default!;
-    public DbSet<StationReport> StationReports { get; set; } = default!;
-    public DbSet<UserLocationHistory> UserLocationHistories { get; set; } = default!;
     public DbSet<Vehicle> Vehicles { get; set; } = default!;
     public DbSet<Country> Regions { get; set; } = default!;
     public DbSet<District> Districts { get; set; } = default!;
     public DbSet<Region> Countries { get; set; } = default!;
+    public DbSet<Company> Companies { get; set; } = default!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -9,7 +9,6 @@ namespace AutoLife.Domain.Entities
 {
     public class BaseEntity
     {
-        [Key]
         public long BaseId { get; set; }
         public DateTime? CreateDate { get; set; } = DateTime.UtcNow;
         public DateTime? UpdateDate { get; set; }

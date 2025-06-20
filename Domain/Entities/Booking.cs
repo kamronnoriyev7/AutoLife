@@ -12,17 +12,32 @@ public class Booking : BaseEntity            /// Booking ni umumiy barcha zakazl
     public long Id { get; set; }
     public long UserId { get; set; }
     public User User { get; set; } = default!;
-    public long ParkingId { get; set; }
+
+    public long? ParkingId { get; set; }
+    public Parking? Parking { get; set; } = default!;
+
+    public long? FuelStationId { get; set; }
+    public FuelStation? FuelStation { get; set; } = default!;
+
+    public long? ServiceCenterId { get; set; } 
+    public ServiceCenter? ServiceCenter { get; set; } = default!;
+
+    public long? VehicleId { get; set; }
+    public Vehicle? Vehicle { get; set; } = default!;
+
+    public string Description { get; set; } = string.Empty;
+
+    public long? AddressId { get; set; } 
+    public Address? Address { get; set; } = new(); 
 
     public DateTime From { get; set; }
     public DateTime To { get; set; }
-
-    public int SpotCount { get; set; } 
-
+    public int? SpotCount { get; set; } 
     public decimal TotalPrice { get; set; }
+    public BookingStatus? Status { get; set; } 
 
-    public BookingStatus Status { get; set; } 
+    public ICollection<Notification>? Notifications { get; set; } //Har bir booking uchun notification bo'lishi kerak
+    public ICollection<Rating>? Ratings { get; set; } // Har bir booking uchun rating bo'lishi kerak, lekin bu optional bo'lishi mumkin
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 

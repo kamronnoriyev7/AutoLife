@@ -10,6 +10,8 @@ namespace AutoLife.Domain.Entities;
 public class FuelHistory : BaseEntity
 {
     public long Id { get; set; }
+    public long UserId { get; set; }
+    public User User { get; set; } = default!;
     public long FuelStationId { get; set; }
     public FuelStation FuelStation { get; set; } = default!;
     public FuelType FuelType { get; set; }

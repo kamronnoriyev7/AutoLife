@@ -10,18 +10,28 @@ namespace AutoLife.Domain.Entities;
 
 public class Address : BaseEntity
 {
-    public GeoLocation? Location { get; set; }  
+    public long Id { get; set; } = 0; // Default value for Id, will be set by the database
     public string? Orientation { get; set; }
+    public string? Street { get; set; }
+    public string? HouseNumber { get; set; }
+    public long? GeoLocationId { get; set; }
+    public GeoLocation? GeoLocation { get; set; } 
 
-    [ForeignKey(nameof(Country))]
-    public Guid CountryId { get; set; }
+    public long? UserId{ get; set; }
+    public User? User { get; set; }
+
+    public long? CountryId { get; set; }
     public Country? Country { get; set; }
 
-    [ForeignKey(nameof(Region))]
-    public Guid? RegionId { get; set; }
+    public long? RegionId { get; set; }
     public Region? Region { get; set; }
 
-    [ForeignKey(nameof(District))]
-    public Guid? DistrictId { get; set; }
+    public long? DistrictId { get; set; }
     public District? District { get; set; }
+
+    public long? CompanyId { get; set; }
+    public Company? Company { get; set; } 
+    public ICollection<Parking>? Parkings { get; set; } = new List<Parking>();
+    public ICollection<ServiceCenter>? ServiceCenters { get; set; } = new List<ServiceCenter>();
+    public ICollection<FuelStation>? FuelStations { get; set; } = new List<FuelStation>();
 }
