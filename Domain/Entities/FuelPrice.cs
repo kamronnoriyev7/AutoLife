@@ -11,11 +11,14 @@ namespace AutoLife.Domain.Entities;
 public class FuelPrice : BaseEntity
 {
     public long Id { get; set; }
-
     public long FuelStationId { get; set; }
     public FuelStation FuelStation { get; set; } = default!;
 
-    public FuelType FuelType { get; set; }
+    public FuelType? FuelType { get; set; }
+    public long FuelSubTypeId { get; set; }
+    public FuelSubType FuelSubType { get; set; } = default!;
+
     public decimal Price { get; set; }
-    public DateTime Date { get; set; } = DateTime.UtcNow;
+    public DateOnly Date { get; set; } // Narxning amal qilish sanasi
+
 }

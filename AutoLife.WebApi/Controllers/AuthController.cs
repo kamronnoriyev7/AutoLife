@@ -11,22 +11,22 @@ namespace AutoLife.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        //private readonly IAuthService _authService;
 
-        public AuthController(IAuthService authService)
-        {
-            _authService = authService;
-        }
+        //public AuthController(IAuthService authService)
+        //{
+        //    _authService = authService;
+        //}
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var result = await _authService.SignUpAsync(registerDto);
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerDto)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var result = await _authService.SignUpAsync(registerDto);
             
-        }
+        //}
     }
 }

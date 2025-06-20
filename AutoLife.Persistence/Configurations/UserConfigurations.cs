@@ -13,81 +13,127 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        builder.ToTable("Users");
+
         builder.HasKey(u => u.Id);
 
         builder.Property(u => u.FirstName)
-               .IsRequired()
-               .HasMaxLength(50);
+            .HasMaxLength(100)
+            .IsRequired();
 
         builder.Property(u => u.LastName)
-               .IsRequired()
-               .HasMaxLength(50);
+            .HasMaxLength(100)
+            .IsRequired();
 
         builder.Property(u => u.UserName)
-               .IsRequired()
-               .HasMaxLength(100);
-
-        builder.HasIndex(u => u.UserName)
-               .IsUnique(); // UserName unikal bo'lishi kerak
+            .HasMaxLength(100)
+            .IsRequired();
 
         builder.Property(u => u.PhoneNumber)
-               .IsRequired()
-               .HasMaxLength(15);
+            .HasMaxLength(20)
+            .IsRequired();
 
         builder.Property(u => u.Email)
-               .IsRequired()
-               .HasMaxLength(100);
+            .HasMaxLength(150)
+            .IsRequired();
 
         builder.Property(u => u.PasswordHash)
-               .HasMaxLength(255);
+            .HasMaxLength(500)
+            .IsRequired(false);
 
         builder.Property(u => u.PasswordSalt)
-               .HasMaxLength(255);
+            .HasMaxLength(500)
+            .IsRequired(false);
 
-        builder.Property(u => u.DateOfBirth)
-               .IsRequired();
+        builder.Property(u => u.IsActive)
+            .IsRequired();
 
-        builder.Property(u => u.CreatedAt)
-               .IsRequired();
+        builder.Property(u => u.isAdmin)
+            .IsRequired();
 
         builder.Property(u => u.Role)
-               .HasConversion<int>() // Enum int sifatida saqlanadi
-               .IsRequired();
+            .HasConversion<string>() // Enum string ko‘rinishda saqlanadi
+            .IsRequired();
 
-        // 1:N - User → Vehicles
-        builder.HasMany(u => u.Vehicles)
-               .WithOne(v => v.User)
-               .HasForeignKey(v => v.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(u => u.DateOfBirth)
+            .IsRequired();
 
-        // 1:N - User → Bookings
-        builder.HasMany(u => u.Bookings)
-               .WithOne(b => b.User)
-               .HasForeignKey(b => b.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-        // 1:N - User → Notifications
-        builder.HasMany(u => u.Notifications)
-               .WithOne(n => n.User)
-               .HasForeignKey(n => n.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-        // 1:N - User → Ratings
-        builder.HasMany(u => u.Ratings)
-               .WithOne(r => r.User)
-               .HasForeignKey(r => r.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-        // 1:N - User → RefreshTokens
-        builder.HasMany(u => u.RefreshTokens)
-               .WithOne(rt => rt.User)
-               .HasForeignKey(rt => rt.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-        // 1:1 - User → ProfileImage (nullable)
+        // ProfileImage (1:1 optional)
         builder.HasOne(u => u.ProfileImage)
-               .WithOne()
-               .HasForeignKey<Image>(img => img.Id)
-               .OnDelete(DeleteBehavior.SetNull);
+            .WithOne()
+            .HasForeignKey<User>(u => u.Id) // Ehtiyot bo‘ling: bu ProfileImage uchun alohida FK bo‘lmasa, `WithOne()` yetarli
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // One-to-many munosabatlar:
+
+        builder.HasMany(u => u.Images)
+            .WithOne(i => i.User)
+            .HasForeignKey(i => i.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(u => u.Vehicles)
+            .WithOne(v => v.User)
+            .HasForeignKey(v => v.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(u => u.Bookings)
+            .WithOne(b => b.User)
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(u => u.Notifications)
+            .WithOne(n => n.User)
+            .HasForeignKey(n => n.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(u => u.Ratings)
+            .WithOne(r => r.User)
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(u => u.RefreshTokens)
+            .WithOne(rt => rt.User)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(u => u.AppFeedbacks)
+            .WithOne(fb => fb.User)
+            .HasForeignKey(fb => fb.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(u => u.Favorites)
+            .WithOne(f => f.User)
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(u => u.FuelStations)
+            .WithOne(fs => fs.User) // Agar `FuelStation` da `UserId` bo‘lsa
+            .HasForeignKey(fs => fs.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(u => u.Parkings)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(u => u.ServiceCenters)
+            .WithOne(sc => sc.User)
+            .HasForeignKey(sc => sc.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(u => u.Companies)
+            .WithOne(c => c.User) // Agar Company’da `UserId` mavjud bo‘lsa
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(u => u.News)
+            .WithOne(n => n.User)
+            .HasForeignKey(n => n.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(u => u.Addresses)
+            .WithOne(a => a.User)
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

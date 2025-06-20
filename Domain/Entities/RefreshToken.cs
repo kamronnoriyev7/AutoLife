@@ -15,4 +15,5 @@ public class RefreshToken : BaseEntity
 
     public long UserId { get; set; }
     public User User { get; set; } = default!;
+
 }
