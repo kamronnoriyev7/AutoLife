@@ -17,9 +17,6 @@ public class Company : BaseEntity
     public string? Website { get; set; } // Optional website URL for the company
     public string? LogoUrl { get; set; }
 
-    public long? OwnerId { get; set; }
-    public User? OwnerUser { get; set; }
-
     public long? UserId { get; set; } // Foreign key to the User entity
     public User? User { get; set; } // Navigation property to the User entity
 

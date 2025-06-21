@@ -47,9 +47,6 @@ public class UserService : IUserService
         if (string.IsNullOrWhiteSpace(user.UserName))
             throw new ArgumentException("Username cannot be null or empty.", nameof(user.UserName));
 
-        if (string.IsNullOrWhiteSpace(user.Password))
-            throw new ArgumentException("Password cannot be null or empty.", nameof(user.Password));
-
         if (await IsUsernameTakenAsync(user.UserName))
             throw new Exception("Username is already taken.");
 
@@ -66,7 +63,6 @@ public class UserService : IUserService
         existingUser.Email = user.Email;
         existingUser.PhoneNumber = user.PhoneNumber;
         existingUser.UserName = user.UserName;
-        existingUser.Password = user.Password;
         existingUser.PasswordHash = user.PasswordHash;
 
         _unitOfWork.Repository<User>().Update(existingUser);
@@ -108,7 +104,7 @@ public class UserService : IUserService
     public async Task<User?> AuthenticateAsync(string username, string password)
     {
         var users = await _unitOfWork.Repository<User>().FindAsync(
-            u => u.UserName == username && u.Password == password
+            u => u.UserName == username && u.PasswordHash == password
         ) 
             ?? throw new Exception("Invalid username or password");
 
@@ -116,18 +112,23 @@ public class UserService : IUserService
             ?? throw new Exception("Invalid username or password");
     }
 
-    public async Task ChangePasswordAsync(long userId, string currentPassword, string newPassword)
+    public Task ChangePasswordAsync(long userId, string currentPassword, string newPassword)
     {
-        var user = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
-        if (user == null)
-            throw new Exception("User not found");
-
-        if (user.Password != currentPassword)
-            throw new Exception("Current password is incorrect");
-
-        user.Password = newPassword;
-        _unitOfWork.Repository<User>().Update(user);
-        await _unitOfWork.SaveChangesAsync();
+        throw new NotImplementedException();
     }
+
+    //public async Task ChangePasswordAsync(long userId, string currentPassword, string newPassword)
+    //{
+    //    var user = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
+    //    if (user == null)
+    //        throw new Exception("User not found");
+
+    //    if (user.Password != currentPassword)
+    //        throw new Exception("Current password is incorrect");
+
+    //    user.Password = newPassword;
+    //    _unitOfWork.Repository<User>().Update(user);
+    //    await _unitOfWork.SaveChangesAsync();
+    //}
 }
 
