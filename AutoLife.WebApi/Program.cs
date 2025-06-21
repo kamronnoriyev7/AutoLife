@@ -1,4 +1,5 @@
 ﻿using AutoLife.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -10,33 +11,38 @@ namespace AutoLife.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // 💡 ConnectionString va barcha Service/Repo'larni ro‘yxatdan o‘tkazish
+            // 🔌 ConnectionString, DbContext, Service/Repository'larni ro‘yxatdan o‘tkazish
             builder.Services.AddApplicationServices(builder.Configuration);
 
-            builder.Services.AddAuthentication("Bearer")
-            .AddJwtBearer("Bearer", options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
+            // 🔐 JWT sozlamalari
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-                };
-            });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+                        )
+                    };
+                });
 
+            // 🔑 Ruxsat siyosatini faollashtirish
+            builder.Services.AddAuthorization();
 
-            // 📦 Controller va Swagger
+            // 🧪 Swagger va Controllerlar
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // 🔄 Pipeline konfiguratsiyasi
+            // 🌐 Middlewares
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -44,10 +50,12 @@ namespace AutoLife.WebApi
             }
 
             app.UseHttpsRedirection();
+
+            // 💡 JWT uchun authentication va authorization qo‘shish
+            app.UseAuthentication(); // ⚠️ Har doim `UseAuthorization` dan oldin
             app.UseAuthorization();
 
             app.MapControllers();
-
             app.Run();
         }
     }
