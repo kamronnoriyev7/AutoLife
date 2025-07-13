@@ -14,7 +14,7 @@ public class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        builder.HasKey(e => e.Id);
+        builder.HasKey(e => e.BaseId);
 
         builder.Property(e => e.CreateDate)
                .IsRequired();

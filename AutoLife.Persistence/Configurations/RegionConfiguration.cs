@@ -15,7 +15,7 @@ public class RegionConfiguration : IEntityTypeConfiguration<Region>
     {
         builder.ToTable("Regions");
 
-        builder.HasKey(r => r.Id);
+        builder.HasKey(r => r.BaseId);
 
         builder.Property(r => r.UzName)
             .HasMaxLength(200)

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoLife.Application.DTOs.AuthDTOs;
-
-
+namespace AutoLife.Identity.Models.AuthDTOs.Responses
+{
+    internal class UserInfoResponse
+    {
+    }
+}

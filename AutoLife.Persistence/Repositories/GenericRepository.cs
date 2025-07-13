@@ -44,5 +44,75 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
     public Task<int> SaveChangesAsync() => _context.SaveChangesAsync();
 
+    public async Task<IEnumerable<T>> GetPagedListAsync(
+         int pageNumber, int pageSize,
+         Expression<Func<T, bool>>? predicate = null,
+         string includeProperties = "",
+         bool asNoTracking = true)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (predicate is not null)
+            query = query.Where(predicate);
+
+        if (!string.IsNullOrWhiteSpace(includeProperties))
+        {
+            foreach (var includeProperty in includeProperties.Split(',', StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty.Trim());
+            }
+        }
+
+        if (asNoTracking)
+            query = query.AsNoTracking();
+
+        return await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+    {
+        if (predicate == null)
+            return await _dbSet.CountAsync();
+        return await _dbSet.CountAsync(predicate);
+    }
+
+    public async Task<bool> SingleExistsAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.AnyAsync(predicate);
+    }
+
+    public void UpdateRange(IEnumerable<T> entities)
+    {
+        _dbSet.UpdateRange(entities);
+    }
+
+    public async Task SoftDeleteAsync(long id)
+    {
+        var entity = await _dbSet.FirstOrDefaultAsync(e => e.BaseId == id);
+        if (entity is null) throw new Exception("Entity not found");
+
+        entity.IsDeleted = true;
+        entity.DeleteDate = DateTime.UtcNow;
+        _dbSet.Update(entity);
+    }
+
+    public async Task RestoreDeletedAsync(long id)
+    {
+        var entity = await _dbSet.FirstOrDefaultAsync(e => e.BaseId == id && e.IsDeleted);
+        if (entity is null) throw new Exception("Entity not found or not deleted");
+
+        entity.IsDeleted = false;
+        entity.DeleteDate = null;
+        _dbSet.Update(entity);
+    }
+
+    public async Task<IEnumerable<T>> FromSqlRawAsync(string sql, params object[] parameters)
+    {
+        return await _dbSet.FromSqlRaw(sql, parameters).ToListAsync();
+    }
+
 }
 

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoLife.Domain.Enums;
-
-public enum UserRole
+namespace AutoLife.Identity.Models.AuthDTOs.Requests
 {
-    User = 1,
-    Admin = 2,
-    Operator = 3
+    internal class RefreshTokenRequest
+    {
+    }
 }
