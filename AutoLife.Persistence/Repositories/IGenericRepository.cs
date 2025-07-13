@@ -12,6 +12,12 @@ namespace AutoLife.Persistence.Repositories;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
+    Task<IEnumerable<T>> GetPagedListAsync(
+            int pageNumber, int pageSize,
+            Expression<Func<T, bool>>? predicate = null,
+            string includeProperties = "",
+            bool asNoTracking = true);
+
     Task<T?> GetByIdAsync(long id, string includeProperties = "", bool includeDeleted = false, bool asNoTracking = false);
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
@@ -20,5 +26,11 @@ public interface IGenericRepository<T> where T : BaseEntity
     void Update(T entity);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);
+    Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null);
+    Task<bool> SingleExistsAsync(Expression<Func<T, bool>> predicate);
+    void UpdateRange(IEnumerable<T> entities);
+    Task SoftDeleteAsync(long id);
+    Task RestoreDeletedAsync(long id);
+    Task<IEnumerable<T>> FromSqlRawAsync(string sql, params object[] parameters);
 }
 
