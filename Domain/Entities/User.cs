@@ -22,10 +22,9 @@ public class User : BaseEntity
     public bool isAdmin { get; set; } = false; // Indicates if the user has admin privileges
 
     public UserRole Role { get; set; } 
-    public Image? ProfileImage { get; set; } = null;
     public DateOnly DateOfBirth { get; set; } = default!;
 
-    public ICollection<Image>? Images { get; set; } = new List<Image>(); // Collection of images associated with the user
+    public ICollection<Image>? Images { get; set; }  // Collection of images associated with the user
     public ICollection<Vehicle>? Vehicles { get; set; } = null;
     public ICollection<Booking>? Bookings { get; set; } = new List<Booking>();
     public ICollection<Notification>? Notifications { get; set; } = new List<Notification>();

@@ -1,4 +1,4 @@
-﻿using AutoLife.Domain.Interfaces;
+﻿using AutoLife.Infrastructure.Mappers;
 using AutoLife.Infrastructure.Services.AuthServices;
 using AutoLife.Infrastructure.Services.TokenServices;
 using AutoLife.Persistence.DataBaseContext;
@@ -34,6 +34,12 @@ public static class DependencyInjection
         // Auth va boshqa servislar
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, TokenService>();
+
+        // Mapping profillarni ro‘yxatdan o‘tkazish
+        services.RegisterMappingProfiles(); // bu sening static methoding
+
+        // Mapping wrapper (agar ishlatsang)
+        services.AddScoped<IMappingService, MappingService>();
 
         return services;
     }

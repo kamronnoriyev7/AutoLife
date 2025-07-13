@@ -1,4 +1,4 @@
-﻿using AutoLife.Domain.Interfaces;
+﻿using AutoLife.Domain.Entities;
 using AutoLife.Persistence.DataBaseContext;
 using AutoLife.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,7 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
     }
 
-    public IGenericRepository<T> Repository<T>() where T : class
+    public IGenericRepository<T> Repository<T>() where T : BaseEntity
     {
         var type = typeof(T);
         if (!_repositories.ContainsKey(type))

@@ -29,12 +29,7 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
             .HasMaxLength(50)
             .IsRequired(false);
 
-        // GeoLocation (1:1)
-        builder.HasOne(a => a.GeoLocation)
-            .WithOne(gl => gl.Address)
-            .HasForeignKey<Address>(a => a.GeoLocationId)
-            .OnDelete(DeleteBehavior.SetNull);
-
+       
         // User (1:N optional)
         builder.HasOne(a => a.User)
             .WithMany(u => u.Addresses)

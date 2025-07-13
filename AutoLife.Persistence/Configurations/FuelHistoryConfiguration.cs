@@ -13,7 +13,7 @@ public class FuelHistoryConfiguration : IEntityTypeConfiguration<FuelHistory>
 {
     public void Configure(EntityTypeBuilder<FuelHistory> builder)
     {
-        builder.HasKey(fh => fh.BaseId); // BaseEntity'dan kelgan PK
+        builder.HasKey(fh => fh.Id); // BaseEntity'dan kelgan PK
 
         builder.Property(fh => fh.FuelType)
                .HasConversion<int>() // enumni int sifatida saqlaymiz
