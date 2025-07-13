@@ -13,7 +13,7 @@ public class DistrictConfiguration : IEntityTypeConfiguration<District>
 {
     public void Configure(EntityTypeBuilder<District> builder)
     {
-        builder.HasKey(d => d.BaseId); // BaseEntity'dan olingan PK
+        builder.HasKey(d => d.Id); // BaseEntity'dan olingan PK
 
         builder.Property(d => d.UzName)
                .IsRequired()

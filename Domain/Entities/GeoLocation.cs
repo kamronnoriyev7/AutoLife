@@ -12,14 +12,7 @@ public class GeoLocation : BaseEntity
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string? Description { get; set; } // Qo'shimcha ma'lumotlar uchun
-    public long? AddressId { get; set; } // Agar geojoy manzil bilan bog'liq bo'lsa
-    public Address? Address { get; set; } // Manzil bilan bog'lanish
+    public long AddressId { get; set; }  // ✅ foreign key shu yerda!
+    public Address Address { get; set; } = default!;
 
-    public GeoLocation() { }
-
-    public GeoLocation(double latitude, double longitude)
-    {
-        Latitude = latitude;
-        Longitude = longitude;
-    }
 }

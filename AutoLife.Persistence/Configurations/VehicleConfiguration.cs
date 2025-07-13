@@ -38,11 +38,11 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .HasForeignKey(v => v.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Notification bilan optional one-to-one (birinchi notificationga ulanadi, lekin ko'p notificationlar collection’da ham bor)
-        builder.HasOne(v => v.Notification)
-            .WithOne(n => n.Vehicle)
-            .HasForeignKey<Vehicle>(v => v.NotificationId)
-            .OnDelete(DeleteBehavior.SetNull);
+        //// Notification bilan optional one-to-one (birinchi notificationga ulanadi, lekin ko'p notificationlar collection’da ham bor)
+        //builder.HasOne(v => v.Notification)
+        //    .WithOne(n => n.Vehicle)
+        //    .HasForeignKey<Vehicle>(v => v.NotificationId)
+        //    .OnDelete(DeleteBehavior.SetNull);
 
         // Images
         builder.HasMany(v => v.Images)

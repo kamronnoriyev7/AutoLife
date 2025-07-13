@@ -59,10 +59,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         // ProfileImage (1:1 optional)
-        builder.HasOne(u => u.ProfileImage)
-            .WithOne()
-            .HasForeignKey<User>(u => u.Id) // Ehtiyot bo‘ling: bu ProfileImage uchun alohida FK bo‘lmasa, `WithOne()` yetarli
-            .OnDelete(DeleteBehavior.SetNull);
+        //builder.HasOne(u => u.ProfileImage)
+        //    .WithOne()
+        //    .HasForeignKey<User>(u => u.Id) // Ehtiyot bo‘ling: bu ProfileImage uchun alohida FK bo‘lmasa, `WithOne()` yetarli
+        //    .OnDelete(DeleteBehavior.SetNull);
 
         // One-to-many munosabatlar:
 

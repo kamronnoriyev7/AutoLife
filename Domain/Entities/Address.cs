@@ -14,7 +14,6 @@ public class Address : BaseEntity
     public string? Orientation { get; set; }
     public string? Street { get; set; }
     public string? HouseNumber { get; set; }
-    public long? GeoLocationId { get; set; }
     public GeoLocation? GeoLocation { get; set; } 
 
     public long? UserId{ get; set; }

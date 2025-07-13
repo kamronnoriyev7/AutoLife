@@ -1,11 +1,6 @@
 ﻿using AutoLife.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Configurations;
 
@@ -27,10 +22,10 @@ public class GeoLocationConfiguration : IEntityTypeConfiguration<GeoLocation>
             .HasMaxLength(300)
             .IsRequired(false);
 
-        // Address bilan 1:1 bog‘lanish
         builder.HasOne(gl => gl.Address)
-            .WithOne(a => a.GeoLocation)
-            .HasForeignKey<Address>(a => a.GeoLocationId)
-            .OnDelete(DeleteBehavior.SetNull); // GeoLocation o‘chsa, Address.GeoLocationId null bo‘ladi
+         .WithOne(a => a.GeoLocation)
+         .HasForeignKey<GeoLocation>(gl => gl.AddressId)
+         .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

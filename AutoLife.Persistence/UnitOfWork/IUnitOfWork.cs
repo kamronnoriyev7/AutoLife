@@ -1,4 +1,5 @@
-﻿using AutoLife.Domain.Interfaces;
+﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AutoLife.Persistence.UnitOfWork;
 
 public interface IUnitOfWork : IDisposable
 {
-    IGenericRepository<T> Repository<T>() where T : class;
+    IGenericRepository<T> Repository<T>() where T : BaseEntity;
     Task<int> SaveChangesAsync();
 }
 
