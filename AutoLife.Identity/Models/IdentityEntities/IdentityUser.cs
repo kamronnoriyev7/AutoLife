@@ -1,26 +1,33 @@
 ﻿using AutoLife.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Models.IdentityEntities;
 
-public class IdentityUser
+public class IdentityUser : BaseEntity
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
 
-    public string FirstName { get; set; } = default!;
-    public string LastName { get; set; } = default!;
+    public string UserName { get; set; } = default!;
     public string Email { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
-    public string PasswordHash { get; set; } = default!;
-    public bool IsActive { get; set; } = true;
-    public bool IsAdmin { get; set; } = false;
 
+    public string PasswordSalt { get; set; } = default!;
+    public string PasswordHash { get; set; } = default!;
+
+    public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Navigation — bu IdentityUser ga mos bo'lgan Domain User bor
-    public User? User { get; set; } // 1-1 bog‘lanadi (optional)
+    public Guid RoleId { get; set; }
+    public UserRole? Role { get; set; }
+
+    public bool IsEmailConfirmed { get; set; } = false;
+    public bool IsPhoneNumberConfirmed { get; set; } = false;
+
+    public Guid UserId { get; set; } = default!;
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>(); // Collection of refresh tokens associated with the user
 }

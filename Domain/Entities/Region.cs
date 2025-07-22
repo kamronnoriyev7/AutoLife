@@ -8,7 +8,7 @@ public class Region : BaseEntity
     public string RuName { get; set; } = string.Empty;
     public string EnName { get; set; } = string.Empty;
 
-    public long CountryId { get; set; }
+    public Guid CountryId { get; set; }
     public Country? Country { get; set; }
 
     public IEnumerable<District>? Districts { get; set; }

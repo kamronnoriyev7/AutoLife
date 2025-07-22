@@ -8,13 +8,13 @@ namespace AutoLife.Domain.Entities;
 
 public class Parking : BaseEntity
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
-    public long AddressId { get; set; }
+    public Guid AddressId { get; set; }
     public Address Address { get; set; } = new();
 
-    public long? UserId { get; set; } // Foreign key to the User entity
+    public Guid? UserId { get; set; } // Foreign key to the User entity
     public User? User { get; set; } = null; // Nullable to allow for parkings not associated with a user
 
     public decimal HourlyRate { get; set; }
@@ -32,7 +32,7 @@ public class Parking : BaseEntity
 
     public double AverageRating { get; set; }
 
-    public long? CompanyId { get; set; }
+    public Guid? CompanyId { get; set; }
     public Company? Company { get; set; } = null; // Nullable to allow for parkings not associated with a company
 
     public ICollection<Rating> Ratings { get; set; } = new List<Rating>();

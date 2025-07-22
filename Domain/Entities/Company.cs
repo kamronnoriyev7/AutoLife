@@ -9,7 +9,7 @@ namespace AutoLife.Domain.Entities;
 
 public class Company : BaseEntity
 {
-    public long Id { get; set; } = 0; // Default value for Id, will be set by the database
+    public Guid Id { get; set; }  // Default value for Id, will be set by the database
     public string Name { get; set; } = default!; // Company name
     public string? Description { get; set; } // Optional description of the company
     public string? PhoneNumber { get; set; } // Optional phone number for the company
@@ -17,7 +17,7 @@ public class Company : BaseEntity
     public string? Website { get; set; } // Optional website URL for the company
     public string? LogoUrl { get; set; }
 
-    public long? UserId { get; set; } // Foreign key to the User entity
+    public Guid? UserId { get; set; } // Foreign key to the User entity
     public User? User { get; set; } // Navigation property to the User entity
 
     public ICollection<Rating>? Ratings { get; set; } = new List<Rating>(); // Collection of ratings associated with the company

@@ -1,21 +1,15 @@
 ﻿using AutoLife.Domain.Entities;
-using AutoLife.Persistence.DataBaseContext;
 using AutoLife.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.UnitOfWork;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContext
 {
-    private readonly AppDbContext _context; // Change DbContext to AppDbContext
+    private readonly TContext _context;
     private readonly Dictionary<Type, object> _repositories = new();
 
-    public UnitOfWork(AppDbContext context) // Update constructor parameter type
+    public UnitOfWork(TContext context)
     {
         _context = context;
     }
@@ -25,21 +19,15 @@ public class UnitOfWork : IUnitOfWork
         var type = typeof(T);
         if (!_repositories.ContainsKey(type))
         {
-            var repoInstance = new GenericRepository<T>(_context); // _context is now AppDbContext
+            var repoInstance = new GenericRepository<T>(_context);
             _repositories[type] = repoInstance;
         }
 
         return (IGenericRepository<T>)_repositories[type];
     }
 
-    public async Task<int> SaveChangesAsync()
-    {
-        return await _context.SaveChangesAsync();
-    }
+    public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 
-    public void Dispose()
-    {
-        _context.Dispose();
-    }
+    public void Dispose() => _context.Dispose();
 }
 

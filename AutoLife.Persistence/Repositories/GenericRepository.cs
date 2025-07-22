@@ -3,22 +3,24 @@ using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
+using DbContext = Microsoft.EntityFrameworkCore.DbContext;
 
 namespace AutoLife.Persistence.Repositories;
 
 public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {
-    protected readonly AppDbContext _context;
-    protected readonly DbSet<T> _dbSet;
     private readonly ConcurrentDictionary<string, object> _repositories = new();
 
-    public GenericRepository(AppDbContext context)
+    protected readonly DbContext _context;
+    protected readonly DbSet<T> _dbSet;
+
+    public GenericRepository(DbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
     }
 
-    public virtual async  Task<T?> GetByIdAsync(long id, string includeProperties = "", bool includeDeleted = false, bool asNoTracking = false) => await _dbSet.FindAsync(id);
+    public virtual async  Task<T?> GetByIdAsync(Guid id, string includeProperties = "", bool includeDeleted = false, bool asNoTracking = false) => await _dbSet.FindAsync(id);
     public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
      => await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
@@ -28,21 +30,6 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     public void Update(T entity) => _dbSet.Update(entity);
     public void Remove(T entity) => _dbSet.Remove(entity);
     public void RemoveRange(IEnumerable<T> entities) => _dbSet.RemoveRange(entities);
-
-    public IGenericRepository<T> Repository<T>() where T : BaseEntity
-    {
-        var type = typeof(T).Name;
-
-        if (!_repositories.ContainsKey(type))
-        {
-            var repoInstance = new GenericRepository<T>(_context);
-            _repositories.TryAdd(type, repoInstance!);
-        }
-
-        return (IGenericRepository<T>)_repositories[type];
-    }
-
-    public Task<int> SaveChangesAsync() => _context.SaveChangesAsync();
 
     public async Task<IEnumerable<T>> GetPagedListAsync(
          int pageNumber, int pageSize,
@@ -79,19 +66,47 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await _dbSet.CountAsync(predicate);
     }
 
-    public async Task<bool> SingleExistsAsync(Expression<Func<T, bool>> predicate)
+    public async Task<bool> IsUniqueAsync(T entity, params Expression<Func<T, object>>[] uniqueProperties)
     {
-        return await _dbSet.AnyAsync(predicate);
+        IQueryable<T> query = _dbSet;
+
+        foreach (var propExpr in uniqueProperties)
+        {
+            var compiled = propExpr.Compile();
+            var value = compiled(entity);
+
+            query = query.Where(e => EF.Property<object>(e, GetPropertyName(propExpr))!.Equals(value));
+        }
+
+        if (entity.BasaEntityId != Guid.Empty)
+        {
+            // agar yangilanyapti deb hisoblasak, o'zini tekshirishdan chiqaramiz
+            query = query.Where(e => e.BasaEntityId != entity.BasaEntityId);
+        }
+
+        return !await query.AnyAsync();
     }
+
+    private string GetPropertyName(Expression<Func<T, object>> expression)
+    {
+        if (expression.Body is MemberExpression member)
+            return member.Member.Name;
+
+        if (expression.Body is UnaryExpression unary && unary.Operand is MemberExpression memberOperand)
+            return memberOperand.Member.Name;
+
+        throw new InvalidOperationException("Invalid property expression");
+    }
+
 
     public void UpdateRange(IEnumerable<T> entities)
     {
         _dbSet.UpdateRange(entities);
     }
 
-    public async Task SoftDeleteAsync(long id)
+    public async Task SoftDeleteAsync(Guid id)
     {
-        var entity = await _dbSet.FirstOrDefaultAsync(e => e.BaseId == id);
+        var entity = await _dbSet.FirstOrDefaultAsync(e => e.BasaEntityId == id);
         if (entity is null) throw new Exception("Entity not found");
 
         entity.IsDeleted = true;
@@ -99,9 +114,9 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         _dbSet.Update(entity);
     }
 
-    public async Task RestoreDeletedAsync(long id)
+    public async Task RestoreDeletedAsync(Guid id)
     {
-        var entity = await _dbSet.FirstOrDefaultAsync(e => e.BaseId == id && e.IsDeleted);
+        var entity = await _dbSet.FirstOrDefaultAsync(e => e.BasaEntityId == id && e.IsDeleted);
         if (entity is null) throw new Exception("Entity not found or not deleted");
 
         entity.IsDeleted = false;

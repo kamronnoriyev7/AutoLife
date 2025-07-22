@@ -37,7 +37,7 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.HasOne(i => i.FuelStation)
             .WithMany(fs => fs.Images)
             .HasForeignKey(i => i.FuelStationId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Parking bilan bog'lanish
         builder.HasOne(i => i.Parking)

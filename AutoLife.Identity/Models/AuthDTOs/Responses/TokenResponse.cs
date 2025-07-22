@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoLife.Identity.Models.AuthDTOs.Responses
+namespace AutoLife.Identity.Models.AuthDTOs.Responses;
+
+public class TokenResponse
 {
-    internal class TokenResponse
-    {
-    }
+    public string AccessToken { get; set; } = default!;
+    public string RefreshToken { get; set; } = default!;
 }

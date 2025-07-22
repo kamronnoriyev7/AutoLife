@@ -9,6 +9,6 @@ public class District : BaseEntity
     public string EnName { get; set; } = string.Empty;
 
     [ForeignKey(nameof(Region))]
-    public long RegionId { get; set; }
+    public Guid RegionId { get; set; }
     public Region? Region { get; set; }
 }
