@@ -57,7 +57,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         builder.HasOne(n => n.FuelStation)
             .WithMany(fs => fs.Notifications)
             .HasForeignKey(n => n.FuelStationId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Parking bilan bog‘lanish
         builder.HasOne(n => n.Parking)

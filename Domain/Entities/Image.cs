@@ -8,29 +8,29 @@ namespace AutoLife.Domain.Entities;
 
 public class Image : BaseEntity
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
 
     public string? ImageUrl { get; set; } = default!;
 
-    public long? VehicleId { get; set; }
+    public Guid? VehicleId { get; set; }
     public Vehicle? Vehicle { get; set; }
 
-    public long? UserId { get; set; }
+    public Guid? UserId { get; set; }
     public User? User { get; set; }
 
-    public long? FuelStationId { get; set; }
+    public Guid? FuelStationId { get; set; }
     public FuelStation? FuelStation { get; set; }
 
-    public long? ParkingId { get; set; }
+    public Guid? ParkingId { get; set; }
     public Parking? Parking { get; set; }
 
-    public long? ServiceCenterId { get; set; }
+    public Guid? ServiceCenterId { get; set; }
     public ServiceCenter? ServiceCenter { get; set; }
 
-    public long? NewsId { get; set; }
+    public Guid? NewsId { get; set; }
     public News? News { get; set; }
 
-    public long? CompanyId { get; set; }
+    public Guid? CompanyId { get; set; }
     public Company? Company { get; set; } // Agar Image kompaniyaga tegishli bo'lsa
 }
 

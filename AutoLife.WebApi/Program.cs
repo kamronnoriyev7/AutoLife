@@ -1,4 +1,5 @@
-﻿using AutoLife.Infrastructure.Extensions;
+﻿using AutoLife.Identity.IdentityDependencyInjection;
+using AutoLife.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -13,6 +14,10 @@ namespace AutoLife.WebApi
 
             // 🔌 ConnectionString, DbContext, Service/Repository'larni ro‘yxatdan o‘tkazish
             builder.Services.AddApplicationServices(builder.Configuration);
+            builder.Services.AddIdentityServices(builder.Configuration);
+
+            builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
 
             // 🔐 JWT sozlamalari
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

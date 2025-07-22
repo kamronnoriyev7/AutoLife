@@ -47,7 +47,7 @@ public class RatingConfiguration : IEntityTypeConfiguration<Rating>
         builder.HasOne(r => r.FuelStation)
             .WithMany(fs => fs.Ratings)
             .HasForeignKey(r => r.FuelStationId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Company bilan bog‘lanish
         builder.HasOne(r => r.Company)

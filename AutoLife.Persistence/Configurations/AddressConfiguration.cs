@@ -34,48 +34,48 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         builder.HasOne(a => a.User)
             .WithMany(u => u.Addresses)
             .HasForeignKey(a => a.UserId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Country (N:1 required)
         builder.HasOne(a => a.Country)
             .WithMany()
             .HasForeignKey(a => a.CountryId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Region (N:1 optional)
         builder.HasOne(a => a.Region)
             .WithMany()
             .HasForeignKey(a => a.RegionId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // District (N:1 optional)
         builder.HasOne(a => a.District)
             .WithMany()
             .HasForeignKey(a => a.DistrictId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Company (N:1 optional)
         builder.HasOne(a => a.Company)
             .WithMany(c => c.Addresses)
             .HasForeignKey(a => a.CompanyId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Parkings
         builder.HasMany(a => a.Parkings)
             .WithOne(p => p.Address)
             .HasForeignKey(p => p.AddressId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // ServiceCenters
         builder.HasMany(a => a.ServiceCenters)
             .WithOne(sc => sc.Address)
             .HasForeignKey(sc => sc.AddressId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // FuelStations
         builder.HasMany(a => a.FuelStations)
             .WithOne(fs => fs.Address)
             .HasForeignKey(fs => fs.AddressId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

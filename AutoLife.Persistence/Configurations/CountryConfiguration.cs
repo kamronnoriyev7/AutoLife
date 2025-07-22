@@ -13,7 +13,7 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
     public void Configure(EntityTypeBuilder<Country> builder)
     {
-        builder.HasKey(c => c.BaseId); // BaseEntity'dan meros
+        builder.HasKey(c => c.BasaEntityId); // BaseEntity'dan meros
 
         builder.Property(c => c.UzName)
                .IsRequired()

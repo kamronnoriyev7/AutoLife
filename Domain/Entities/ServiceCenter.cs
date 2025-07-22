@@ -9,19 +9,19 @@ namespace AutoLife.Domain.Entities;
 
 public class ServiceCenter : BaseEntity
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
     public string? PhoneNumber { get; set; }
 
-    public long? UserId { get; set; } // Foreign key to the User entity
+    public Guid? UserId { get; set; } // Foreign key to the User entity
     public User? User { get; set; } = null; // Nullable to allow for service centers not associated with a user
 
     public ServiceType ServiceType { get; set; }
-    public long? AddressId { get; set; }
+    public Guid? AddressId { get; set; }
     public Address? Address { get; set; } = new(); // Nullable to allow for service centers without an address
 
-    public long? CompanyId { get; set; }
+    public Guid? CompanyId { get; set; }
     public Company? Company { get; set; } = null; // Nullable to allow for service centers not associated with a company
 
     public ICollection<Image> Images { get; set; } = new List<Image>();

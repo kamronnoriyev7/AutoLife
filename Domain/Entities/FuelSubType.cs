@@ -9,10 +9,12 @@ namespace AutoLife.Domain.Entities;
 
 public class FuelSubType : BaseEntity
 {
-    public long Id { get; set; }
-    public string Name { get; set; } = default!;  // Masalan: "A-92", "A-95", "Diesel"
-    public FuelPrice FuelPrice { get; set; } = default!;  // FuelPrice bilan bog'liq bo'lishi kerak
-    public string Description { get; set; } = default!;  // Masalan: "A-92 benzini, standart benzin turi"
-    public FuelType FuelType { get; set; }  // FuelType enumidan foydalaniladi
+    public Guid Id { get; set; }
+    public string Name { get; set; } = default!;
+    public string Description { get; set; } = default!;
+
+    public Guid FuelTypeId { get; set; }
+    public FuelType FuelType { get; set; } = default!;
+    public ICollection<FuelPrice> FuelPrices { get; set; } = new List<FuelPrice>();
 
 }

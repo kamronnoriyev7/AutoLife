@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,24 @@ namespace AutoLife.Domain.Entities;
 
 public class User : BaseEntity
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
+
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string UserName { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
     public string Email { get; set; } = default!;
-
-    public string? PasswordHash { get; set; } = default!;
-    public string? PasswordSalt { get; set; } = default!;
-    public bool IsActive { get; set; } = true; // Indicates if the user account is active
-    public bool isAdmin { get; set; } = false; // Indicates if the user has admin privileges
-
-    public UserRole Role { get; set; } 
     public DateOnly DateOfBirth { get; set; } = default!;
+    public bool IsActive { get; set; } = true;
+
+    // Identity bilan bog‘lanish
+    public Guid IdentityUserId { get; set; }
 
     public ICollection<Image>? Images { get; set; }  // Collection of images associated with the user
     public ICollection<Vehicle>? Vehicles { get; set; } = null;
     public ICollection<Booking>? Bookings { get; set; } = new List<Booking>();
     public ICollection<Notification>? Notifications { get; set; } = new List<Notification>();
     public ICollection<Rating>? Ratings { get; set; } = new List<Rating>();
-    public ICollection<RefreshToken>? RefreshTokens { get; set; } = new List<RefreshToken>();
     public ICollection<AppFeedback>? AppFeedbacks { get; set; } = new List<AppFeedback>();
     public ICollection<Favorite>? Favorites { get; set; } = new List<Favorite>();
     public ICollection<FuelStation>? FuelStations { get; set; } = new List<FuelStation>();

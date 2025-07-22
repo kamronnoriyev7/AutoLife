@@ -17,24 +17,25 @@ namespace AutoLife.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.17")
+                .HasAnnotation("ProductVersion", "8.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Address", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("CountryId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CountryId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -42,29 +43,32 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("DistrictId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("DistrictId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("HouseNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Orientation")
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
-                    b.Property<long?>("RegionId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("RegionId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Street")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -78,29 +82,34 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.AppFeedback", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("timestamp with time zone");
@@ -111,8 +120,8 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -123,16 +132,18 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Booking", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid?>("AddressId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("AddressId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -145,38 +156,41 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime>("From")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FuelStationId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("FuelStationId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
-                    b.Property<long?>("ParkingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ParkingId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("ServiceCenterId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ServiceCenterId")
+                        .HasColumnType("uuid");
 
                     b.Property<int?>("SpotCount")
+                        .IsRequired()
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Status")
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("VehicleId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -197,11 +211,9 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Company", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("BasaEntityId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -214,6 +226,9 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -231,13 +246,13 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Website")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("BasaEntityId");
 
                     b.HasIndex("UserId");
 
@@ -246,11 +261,9 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Country", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("BasaEntityId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -260,34 +273,35 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("EnName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("RuName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UzName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
-                    b.HasKey("Id");
+                    b.HasKey("BasaEntityId");
 
-                    b.ToTable("Regions");
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.District", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("BasaEntityId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -297,26 +311,29 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("EnName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long>("RegionId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("RegionId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("RuName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UzName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
-                    b.HasKey("Id");
+                    b.HasKey("BasaEntityId");
 
                     b.HasIndex("RegionId");
 
@@ -325,11 +342,12 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Favorite", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -337,29 +355,30 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FuelStationId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("FuelStationId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long?>("ParkingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ParkingId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("ServiceCenterId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ServiceCenterId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("VehicleId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -373,63 +392,17 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Favorites");
-                });
-
-            modelBuilder.Entity("AutoLife.Domain.Entities.FuelHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("ChangedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("FuelStationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("FuelType")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<decimal>("NewPrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("OldPrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FuelStationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FuelHistories");
+                    b.ToTable("Favorites", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.FuelPrice", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -440,20 +413,17 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("FuelStationId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("FuelStationId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long>("FuelSubTypeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("FuelType")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("FuelSubTypeId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
@@ -462,25 +432,28 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("FuelStationId");
 
-                    b.HasIndex("FuelSubTypeId")
-                        .IsUnique();
+                    b.HasIndex("FuelSubTypeId");
 
                     b.ToTable("FuelPrices");
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.FuelStation", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("AddressId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyBasaEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -488,38 +461,45 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FuelSubTypeId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("FuelSubTypeId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int?>("FuelType")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("FuelTypeId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("OperatorName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("CompanyBasaEntityId");
+
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("FuelSubTypeId");
+
+                    b.HasIndex("FuelTypeId");
 
                     b.HasIndex("UserId");
 
@@ -528,11 +508,12 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.FuelSubType", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -542,36 +523,38 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
-                    b.Property<int>("FuelType")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("FuelTypeId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.ToTable("FuelSubTypes");
+                    b.HasIndex("FuelTypeId");
+
+                    b.ToTable("FuelSubType");
                 });
 
-            modelBuilder.Entity("AutoLife.Domain.Entities.GeoLocation", b =>
+            modelBuilder.Entity("AutoLife.Domain.Entities.FuelType", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("AddressId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -580,7 +563,47 @@ namespace AutoLife.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FuelType");
+                });
+
+            modelBuilder.Entity("AutoLife.Domain.Entities.GeoLocation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -599,19 +622,20 @@ namespace AutoLife.Persistence.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.ToTable("GeoLocations");
+                    b.ToTable("GeoLocations", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Image", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -619,32 +643,34 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FuelStationId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("FuelStationId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long?>("NewsId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("NewsId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("ParkingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ParkingId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("ServiceCenterId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ServiceCenterId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("VehicleId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -662,22 +688,23 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Image");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.News", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Body")
                         .HasColumnType("text");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -685,29 +712,30 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FuelStationId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("FuelStationId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long?>("ParkingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ParkingId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("ServiceCenterId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ServiceCenterId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("VehicleId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -723,25 +751,27 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("News");
+                    b.ToTable("News", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Notification", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Body")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
-                    b.Property<long?>("BookingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("BookingId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -749,32 +779,35 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FuelStationId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("FuelStationId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
-                    b.Property<long?>("ParkingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ParkingId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("ServiceCenterId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ServiceCenterId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("VehicleId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -792,38 +825,42 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Parking", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("AddressId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AvailableSpaces")
                         .HasColumnType("integer");
 
                     b.Property<double>("AverageRating")
-                        .HasColumnType("double precision");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(0.0);
+
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ClosingTime")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("DailyRate")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -832,7 +869,7 @@ namespace AutoLife.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("HourlyRate")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<bool>("IsCovered")
                         .HasColumnType("boolean");
@@ -848,15 +885,18 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("OpeningTime")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("TotalSpaces")
                         .HasColumnType("integer");
@@ -864,8 +904,8 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -875,16 +915,14 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Parkings");
+                    b.ToTable("Parkings", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.ParkingPrice", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("BasaEntityId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -898,11 +936,14 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<TimeSpan>("FromTime")
                         .HasColumnType("interval");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long>("ParkingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("ParkingId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("PricePerHour")
                         .HasColumnType("numeric");
@@ -913,7 +954,7 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("BasaEntityId");
 
                     b.HasIndex("ParkingId");
 
@@ -922,20 +963,22 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Rating", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("BookingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("BookingId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
-                    b.Property<long?>("Companyid")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("Companyid")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -943,29 +986,31 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FuelStationId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("FuelStationId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long?>("ParkingId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ParkingId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("ServiceCenterId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("ServiceCenterId")
+                        .HasColumnType("uuid");
 
                     b.Property<int?>("Stars")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("VehicleId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -983,59 +1028,17 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Ratings");
-                });
-
-            modelBuilder.Entity("AutoLife.Domain.Entities.RefreshToken", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("Ratings", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Region", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("BasaEntityId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("CountryId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -1045,42 +1048,46 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("EnName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("RuName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UzName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
-                    b.HasKey("Id");
+                    b.HasKey("BasaEntityId");
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Regions", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.ServiceCenter", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid?>("AddressId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("AddressId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -1089,17 +1096,20 @@ namespace AutoLife.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("ServiceType")
                         .HasColumnType("integer");
@@ -1107,8 +1117,8 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -1118,16 +1128,17 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ServiceCenters");
+                    b.ToTable("ServiceCenters", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -1140,11 +1151,16 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("IdentityUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -1154,50 +1170,43 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordSalt")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("isAdmin")
-                        .HasColumnType("boolean");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Vehicle", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("BasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Brand")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CompanyBasaEntityId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -1205,29 +1214,33 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("FuelType")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("FuelTypeId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("NumberPlate")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("CompanyBasaEntityId");
+
+                    b.HasIndex("FuelTypeId");
 
                     b.HasIndex("UserId");
 
@@ -1238,23 +1251,28 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
                         .WithMany("Addresses")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.Country", "Country")
                         .WithMany()
-                        .HasForeignKey("CountryId");
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.District", "District")
                         .WithMany()
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("RegionId");
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Addresses")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Company");
 
@@ -1290,11 +1308,13 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasOne("AutoLife.Domain.Entities.Parking", "Parking")
                         .WithMany("Bookings")
-                        .HasForeignKey("ParkingId");
+                        .HasForeignKey("ParkingId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.ServiceCenter", "ServiceCenter")
                         .WithMany("Bookings")
-                        .HasForeignKey("ServiceCenterId");
+                        .HasForeignKey("ServiceCenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Bookings")
@@ -1323,7 +1343,8 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Companies")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("User");
                 });
@@ -1347,11 +1368,13 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasOne("AutoLife.Domain.Entities.Parking", "Parking")
                         .WithMany("Favorites")
-                        .HasForeignKey("ParkingId");
+                        .HasForeignKey("ParkingId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.ServiceCenter", "ServiceCenter")
                         .WithMany("Favorites")
-                        .HasForeignKey("ServiceCenterId");
+                        .HasForeignKey("ServiceCenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Favorites")
@@ -1374,37 +1397,18 @@ namespace AutoLife.Persistence.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("AutoLife.Domain.Entities.FuelHistory", b =>
-                {
-                    b.HasOne("AutoLife.Domain.Entities.FuelStation", "FuelStation")
-                        .WithMany("FuelHistories")
-                        .HasForeignKey("FuelStationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AutoLife.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FuelStation");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("AutoLife.Domain.Entities.FuelPrice", b =>
                 {
                     b.HasOne("AutoLife.Domain.Entities.FuelStation", "FuelStation")
                         .WithMany("FuelPrices")
                         .HasForeignKey("FuelStationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AutoLife.Domain.Entities.FuelSubType", "FuelSubType")
-                        .WithOne("FuelPrice")
-                        .HasForeignKey("AutoLife.Domain.Entities.FuelPrice", "FuelSubTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("FuelPrices")
+                        .HasForeignKey("FuelSubTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("FuelStation");
@@ -1416,19 +1420,34 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.Address", "Address")
                         .WithMany("FuelStations")
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("AutoLife.Domain.Entities.Company", null)
+                        .WithMany("FuelStations")
+                        .HasForeignKey("CompanyBasaEntityId");
 
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
-                        .WithMany("FuelStations")
-                        .HasForeignKey("CompanyId");
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.FuelSubType", "FuelSubType")
                         .WithMany()
-                        .HasForeignKey("FuelSubTypeId");
+                        .HasForeignKey("FuelSubTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("AutoLife.Domain.Entities.FuelType", "FuelType")
+                        .WithMany()
+                        .HasForeignKey("FuelTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("FuelStations")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Address");
 
@@ -1436,7 +1455,20 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Navigation("FuelSubType");
 
+                    b.Navigation("FuelType");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AutoLife.Domain.Entities.FuelSubType", b =>
+                {
+                    b.HasOne("AutoLife.Domain.Entities.FuelType", "FuelType")
+                        .WithMany("FuelSubTypes")
+                        .HasForeignKey("FuelTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("FuelType");
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.GeoLocation", b =>
@@ -1454,31 +1486,38 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
                         .WithMany("Images")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.FuelStation", "FuelStation")
                         .WithMany("Images")
-                        .HasForeignKey("FuelStationId");
+                        .HasForeignKey("FuelStationId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.News", "News")
                         .WithMany("Images")
-                        .HasForeignKey("NewsId");
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.Parking", "Parking")
                         .WithMany("Images")
-                        .HasForeignKey("ParkingId");
+                        .HasForeignKey("ParkingId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.ServiceCenter", "ServiceCenter")
                         .WithMany("Images")
-                        .HasForeignKey("ServiceCenterId");
+                        .HasForeignKey("ServiceCenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Images")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany("Images")
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Company");
 
@@ -1499,23 +1538,28 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
                         .WithMany("NewsList")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.FuelStation", "FuelStation")
                         .WithMany("News")
-                        .HasForeignKey("FuelStationId");
+                        .HasForeignKey("FuelStationId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.Parking", "Parking")
                         .WithMany("News")
-                        .HasForeignKey("ParkingId");
+                        .HasForeignKey("ParkingId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.ServiceCenter", "ServiceCenter")
                         .WithMany("News")
-                        .HasForeignKey("ServiceCenterId");
+                        .HasForeignKey("ServiceCenterId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("News")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany("News")
@@ -1538,23 +1582,28 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.Booking", "Booking")
                         .WithMany("Notifications")
-                        .HasForeignKey("BookingId");
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
                         .WithMany("Notifications")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.FuelStation", "FuelStation")
                         .WithMany("Notifications")
-                        .HasForeignKey("FuelStationId");
+                        .HasForeignKey("FuelStationId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.Parking", "Parking")
                         .WithMany("Notifications")
-                        .HasForeignKey("ParkingId");
+                        .HasForeignKey("ParkingId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.ServiceCenter", "Service")
                         .WithMany("Notifications")
-                        .HasForeignKey("ServiceCenterId");
+                        .HasForeignKey("ServiceCenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Notifications")
@@ -1564,7 +1613,8 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasOne("AutoLife.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany("Notifications")
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Booking");
 
@@ -1591,11 +1641,13 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
                         .WithMany("Parkings")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Parkings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Address");
 
@@ -1623,23 +1675,28 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
                         .WithMany("Ratings")
-                        .HasForeignKey("Companyid");
+                        .HasForeignKey("Companyid")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.FuelStation", "FuelStation")
                         .WithMany("Ratings")
-                        .HasForeignKey("FuelStationId");
+                        .HasForeignKey("FuelStationId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.Parking", "Parking")
                         .WithMany("Ratings")
-                        .HasForeignKey("ParkingId");
+                        .HasForeignKey("ParkingId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.ServiceCenter", "ServiceCenter")
                         .WithMany("Ratings")
-                        .HasForeignKey("ServiceCenterId");
+                        .HasForeignKey("ServiceCenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Ratings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AutoLife.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany("Ratings")
@@ -1658,17 +1715,6 @@ namespace AutoLife.Persistence.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("AutoLife.Domain.Entities.RefreshToken", b =>
-                {
-                    b.HasOne("AutoLife.Domain.Entities.User", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("AutoLife.Domain.Entities.Region", b =>
                 {
                     b.HasOne("AutoLife.Domain.Entities.Country", "Country")
@@ -1684,15 +1730,18 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.Address", "Address")
                         .WithMany("ServiceCenters")
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
                         .WithMany("ServiceCenters")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("ServiceCenters")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Address");
 
@@ -1705,13 +1754,21 @@ namespace AutoLife.Persistence.Migrations
                 {
                     b.HasOne("AutoLife.Domain.Entities.Company", null)
                         .WithMany("Vehicles")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyBasaEntityId");
+
+                    b.HasOne("AutoLife.Domain.Entities.FuelType", "FuelType")
+                        .WithMany()
+                        .HasForeignKey("FuelTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("AutoLife.Domain.Entities.User", "User")
                         .WithMany("Vehicles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FuelType");
 
                     b.Navigation("User");
                 });
@@ -1766,8 +1823,6 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Navigation("Favorites");
 
-                    b.Navigation("FuelHistories");
-
                     b.Navigation("FuelPrices");
 
                     b.Navigation("Images");
@@ -1781,8 +1836,12 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.FuelSubType", b =>
                 {
-                    b.Navigation("FuelPrice")
-                        .IsRequired();
+                    b.Navigation("FuelPrices");
+                });
+
+            modelBuilder.Entity("AutoLife.Domain.Entities.FuelType", b =>
+                {
+                    b.Navigation("FuelSubTypes");
                 });
 
             modelBuilder.Entity("AutoLife.Domain.Entities.News", b =>
@@ -1848,8 +1907,6 @@ namespace AutoLife.Persistence.Migrations
                     b.Navigation("Parkings");
 
                     b.Navigation("Ratings");
-
-                    b.Navigation("RefreshTokens");
 
                     b.Navigation("ServiceCenters");
 

@@ -8,9 +8,9 @@ namespace AutoLife.Domain.Entities;
 
 public class ParkingPrice : BaseEntity
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
 
-    public long ParkingId { get; set; }
+    public Guid ParkingId { get; set; }
     public Parking Parking { get; set; } = default!;
 
     public TimeSpan FromTime { get; set; }  // Masalan: 08:00

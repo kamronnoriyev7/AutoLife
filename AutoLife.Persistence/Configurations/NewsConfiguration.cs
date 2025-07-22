@@ -41,7 +41,7 @@ public class NewsConfiguration : IEntityTypeConfiguration<News>
         builder.HasOne(n => n.FuelStation)
             .WithMany(fs => fs.News)
             .HasForeignKey(n => n.FuelStationId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         // ServiceCenter bilan bog‘lanish
         builder.HasOne(n => n.ServiceCenter)

@@ -1,11 +1,6 @@
 ﻿using AutoLife.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Configurations;
 
@@ -16,6 +11,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable("Users");
 
         builder.HasKey(u => u.Id);
+
+        builder.Property(u => u.IdentityUserId).IsRequired(); // Navigation yo‘q, faqat ID
+
 
         builder.Property(u => u.FirstName)
             .HasMaxLength(100)
@@ -35,24 +33,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Email)
             .HasMaxLength(150)
-            .IsRequired();
-
-        builder.Property(u => u.PasswordHash)
-            .HasMaxLength(500)
-            .IsRequired(false);
-
-        builder.Property(u => u.PasswordSalt)
-            .HasMaxLength(500)
-            .IsRequired(false);
-
-        builder.Property(u => u.IsActive)
-            .IsRequired();
-
-        builder.Property(u => u.isAdmin)
-            .IsRequired();
-
-        builder.Property(u => u.Role)
-            .HasConversion<string>() // Enum string ko‘rinishda saqlanadi
             .IsRequired();
 
         builder.Property(u => u.DateOfBirth)
@@ -91,11 +71,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasForeignKey(r => r.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(u => u.RefreshTokens)
-            .WithOne(rt => rt.User)
-            .HasForeignKey(rt => rt.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasMany(u => u.AppFeedbacks)
             .WithOne(fb => fb.User)
             .HasForeignKey(fb => fb.UserId)
@@ -109,7 +84,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.FuelStations)
             .WithOne(fs => fs.User) // Agar `FuelStation` da `UserId` bo‘lsa
             .HasForeignKey(fs => fs.UserId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasMany(u => u.Parkings)
             .WithOne(p => p.User)
