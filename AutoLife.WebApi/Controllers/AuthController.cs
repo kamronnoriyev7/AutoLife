@@ -1,4 +1,5 @@
 ﻿using AutoLife.Api.Controllers.BaseController;
+using AutoLife.Api.Extensions;
 using AutoLife.Identity.Models.AuthDTOs.Requests;
 using AutoLife.Identity.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,7 @@ public class AuthController : ControllerBase
         return Ok(result); // result -> AccessToken, RefreshToken
     }
 
+
     [HttpPost("refresh-token")]
     public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto dto)
     {
@@ -57,6 +59,15 @@ public class AuthController : ControllerBase
 
         await _authService.ChangePasswordAsync(userId, request);
         return Ok(new { message = "Parol muvaffaqiyatli o‘zgartirildi." });
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(string refreshToken)
+    {
+        await _authService.LogoutAsync(refreshToken);
+
+        return Ok(new { message = "Logged out successfully" });
     }
 
 }

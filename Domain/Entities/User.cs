@@ -20,10 +20,9 @@ public class User : BaseEntity
     public DateOnly DateOfBirth { get; set; } = default!;
     public bool IsActive { get; set; } = true;
 
-    // Identity bilan bog‘lanish
     public Guid IdentityUserId { get; set; }
 
-    public ICollection<Image>? Images { get; set; }  // Collection of images associated with the user
+    public ICollection<Image>? Images { get; set; }  
     public ICollection<Vehicle>? Vehicles { get; set; } = null;
     public ICollection<Booking>? Bookings { get; set; } = new List<Booking>();
     public ICollection<Notification>? Notifications { get; set; } = new List<Notification>();

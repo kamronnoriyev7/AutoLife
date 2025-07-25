@@ -29,6 +29,8 @@ public interface IAuthService
         /// Foydalanuvchi parolini o‘zgartiradi
         /// </summary>
         Task ChangePasswordAsync(Guid identityUserId, ChangePasswordRequestDto changePasswordDto);
-        
-
-    }
+        /// <summary>
+        /// Foydalanuvchini tizimdan chiqadi
+        /// </summary>
+        Task LogoutAsync(string refreshToken);
+}

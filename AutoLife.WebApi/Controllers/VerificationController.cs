@@ -29,15 +29,6 @@ public class VerificationController : ControllerBase
         }
     }
 
-    [HttpPost("verify-otp")]
-    public async Task<IActionResult> VerifyOtp([FromQuery] string email, [FromQuery] string otp)
-    {
-        var result = await _emailOtpService.VerifyEmailAsync(email, otp);
-        if (result)
-            return Ok("Tasdiqlash kodi to‘g‘ri.");
-        return BadRequest("Tasdiqlash kodi noto‘g‘ri yoki muddati tugagan.");
-    }
-
     [HttpPost("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] string email, [FromQuery] string otp)
     {

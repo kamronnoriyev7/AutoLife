@@ -3,6 +3,7 @@ using AutoLife.Identity.Repositories;
 using AutoLife.Persistence.Repositories;
 using AutoLife.Persistence.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,60 +15,91 @@ namespace AutoLife.Identity.Services;
 public class UserRoleService : IUserRoleService
 {
     private readonly IUnitOfWork<IdentityDbContext> _unitOfWork;
-    private readonly IGenericRepository<UserRole> _roleRepo;
+    private readonly IIdentityUserRoleRepository _userRoleRepository;
 
-    public UserRoleService(IUnitOfWork<IdentityDbContext> unitOfWork)
+    public UserRoleService(IUnitOfWork<IdentityDbContext> unitOfWork, IIdentityUserRoleRepository userRoleRepository)
     {
         _unitOfWork = unitOfWork;
-        _roleRepo = unitOfWork.Repository<UserRole>();
+        _userRoleRepository = userRoleRepository;
     }
 
-    public async Task<IEnumerable<UserRole>> GetAllRolesAsync()
+    public async Task<UserRole> CreateAsync(string name, string? description )
     {
-        return await _roleRepo.GetAllAsync();
-    }
+        if (string.IsNullOrWhiteSpace(name) || name.Length > 30)
+        {
+            throw new ArgumentException("Role name cannot be null or empty.", nameof(name));
+        }
 
-    public async Task<UserRole?> GetByIdAsync(Guid id)
-    {
-        return await _roleRepo.GetByIdAsync(id);
-    }
+        var user =  await _userRoleRepository.GetByNameAsync(name);
+        if (user != null)
+        {
+            throw new InvalidOperationException($"Role with name {name} already exists.");
+        }
 
-    public async Task<UserRole> CreateAsync(string name, string? description = null)
-    {
         var role = new UserRole
         {
+            Id = Guid.NewGuid(),
             Name = name,
-            Description = description
+            Description = description,
+            CreateDate = DateTime.UtcNow,
         };
 
-        var existing = await _roleRepo.FindAsync(r => r.Name == name);
-        if (existing != null)
-            throw new Exception("Role already exists");
-
-        await _roleRepo.AddAsync(role);
+        await _userRoleRepository.AddAsync(role);
         await _unitOfWork.SaveChangesAsync();
         return role;
     }
 
-    public async Task<bool> UpdateAsync(Guid id, string name, string? description = null)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        var existing = await _roleRepo.GetByIdAsync(id);
-        if (existing is null) return false;
+        var role = await _userRoleRepository.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"Role with ID {id} not found.");
 
-        existing.Name = name;
-        existing.Description = description;
-
-        _roleRepo.Update(existing);
+        await _userRoleRepository.SoftDeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
         return true;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task<ICollection<UserRole>> GetAllByUserIdAsync(Guid id)
     {
-        var existing = await _roleRepo.GetByIdAsync(id);
-        if (existing is null) return false;
+        var rolesQuery = await _userRoleRepository.GetAllRolesByUserId(id);
+        var roles = await rolesQuery.ToListAsync();
+        if (roles == null || !roles.Any())
+        {
+            throw new KeyNotFoundException($"No roles found for user with ID {id}.");
+        }
+        return roles;
+    }
 
-        _roleRepo.Remove(existing);
+    public async Task<IEnumerable<UserRole>> GetAllRolesAsync()
+    {
+        var roles = await _userRoleRepository.GetAllAsync();
+        if (roles == null || !roles.Any())
+        {
+            throw new KeyNotFoundException("No roles found.");
+        }
+        return roles;
+    }
+
+    public async Task<UserRole?> GetByIdAsync(Guid id)
+    {
+        return await _userRoleRepository.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"Role with ID {id} not found.");
+    }
+
+    public async Task<bool> UpdateAsync(Guid id, string name, string? description = null)
+    {
+        if (string.IsNullOrWhiteSpace(name) || name.Length > 30)
+        {
+            throw new ArgumentException("Role name cannot be null or empty.", nameof(name));
+        }
+
+        var existingRole = await _userRoleRepository.GetByIdAsync(id)
+              ?? throw new KeyNotFoundException($"Role with ID {id} not found.");
+
+        existingRole.Name = name;
+        existingRole.Description = description;
+
+        _userRoleRepository.Update(existingRole);
         await _unitOfWork.SaveChangesAsync();
         return true;
     }

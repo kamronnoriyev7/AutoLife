@@ -1,20 +1,9 @@
 ﻿using Amazon.SimpleSystemsManagement.Model;
-using AutoLife.Domain.Entities;
 using AutoLife.Identity.Models.AuthDTOs.Requests;
 using AutoLife.Identity.Models.AuthDTOs.Responses;
-using AutoLife.Identity.Models.IdentityEntities;
 using AutoLife.Identity.Repositories;
 using AutoLife.Persistence.UnitOfWork;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Caching.Memory;
 using SendGrid.Helpers.Errors.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using IdentityUser = AutoLife.Identity.Models.IdentityEntities.IdentityUser;
 
 namespace AutoLife.Identity.Services;
@@ -51,8 +40,8 @@ public class AuthService : IAuthService
         if (existingUserByPhone is not null)
             throw new AlreadyExistsException("Phone number already exists");
 
-        var isEmailVerified = await _verificationCodeRepository.GetCodeAsync(dto.Email) 
-            ?? throw new NotFoundException("Email verification code not found");
+        var isEmailVerified = await _verificationCodeRepository.GetCodeAsync(dto.Email)
+            ?? throw new NotFoundException("Email is  not found");
 
         if (isEmailVerified.IsUsed)
             throw new AlreadyExistsException("Email is already in use");
@@ -70,10 +59,11 @@ public class AuthService : IAuthService
             PasswordHash = passwordHash,
             CreatedAt = DateTime.UtcNow,
             IsActive = true,
-            RoleId = Guid.Parse("B46E31E2-2BA0-4FA7-8591-27C796A7819A"), // Default role ID, should be replaced with actual role logic
+            IsEmailConfirmed = true, // Assuming email is verified during registration
+            RoleId = Guid.Parse("C5BBA2E5-09FD-4AA7-876E-F03CEB840160"), // Default role ID, should be replaced with actual role logic
         };
 
-        isEmailVerified.IsUsed = true; // Mark email as verified
+        isEmailVerified.IsVerified = true; // Mark email as verified
         _verificationCodeRepository.Update(isEmailVerified);
 
         await _userRepo.AddAsync(user);
@@ -145,6 +135,15 @@ public class AuthService : IAuthService
         await _unitOfWork.SaveChangesAsync();
     }
 
+    public async Task LogoutAsync(string refreshToken)
+    {
+        var isValid = await _refreshTokenService.IsValidAsync(refreshToken);
+        if (!isValid)
+        {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
+        await _refreshTokenService.RevokeAsync(refreshToken);
+    }
 }
 
 

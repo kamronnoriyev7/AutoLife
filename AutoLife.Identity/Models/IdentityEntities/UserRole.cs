@@ -10,8 +10,7 @@ namespace AutoLife.Identity.Models.IdentityEntities;
 public class UserRole : BaseEntity
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = default!; // Masalan: Admin, User, Manager
+    public string? Name { get; set; }  // Masalan: Admin, User, Manager
     public string? Description { get; set; } 
-
     public ICollection<IdentityUser> Users { get; set; } = new List<IdentityUser>();
 }

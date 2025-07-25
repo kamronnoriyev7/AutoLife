@@ -28,6 +28,6 @@ public class IdentityUser : BaseEntity
     public bool IsEmailConfirmed { get; set; } = false;
     public bool IsPhoneNumberConfirmed { get; set; } = false;
 
-    public Guid UserId { get; set; } = default!;
+    public Guid UserId { get; set; } 
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>(); // Collection of refresh tokens associated with the user
 }

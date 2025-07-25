@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Repositories;
 
-public interface IUserRoleRepository : IGenericRepository<UserRole>
+public interface IIdentityUserRoleRepository : IGenericRepository<UserRole>
 {
     Task<UserRole?> GetByNameAsync(string roleName);
+    Task<IQueryable<UserRole>> GetAllRolesByUserId(Guid userId);
 }

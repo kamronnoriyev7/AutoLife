@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="GoogleMaps\" />
-    <Folder Include="Services\UserServices\" />
   </ItemGroup>
 
   <ItemGroup>

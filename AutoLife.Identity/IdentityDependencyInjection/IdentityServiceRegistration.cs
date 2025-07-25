@@ -43,7 +43,7 @@ public static class IdentityServiceRegistration
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IPasswordHasherService, PasswordHasherService>();
         services.AddScoped<IUserRoleService, UserRoleService>();
-        services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+        services.AddScoped<IIdentityUserRoleRepository, IdentityUserRoleRepository>();
         services.AddScoped<IVerificationCodeRepository , VerificationCodeRepository>();
 
         services.Configure<SmtpSettings>(config.GetSection("Email:Smtp"));
