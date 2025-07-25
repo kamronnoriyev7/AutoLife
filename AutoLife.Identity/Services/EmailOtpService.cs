@@ -35,9 +35,10 @@ public class EmailOtpService : IEmailOtpService
 
     public async Task<bool> IsEmailVerifiedAsync(string email)
     {
-        // Check if the email is verified by looking it up in the database or cache
-        var code = await verificationCodeRepository.GetCodeAsync(email);
-        return code != null && !code.IsUsed; // Assuming IsVerified is a property in VerificationCode
+        var code = await verificationCodeRepository.GetCodeAsync(email)
+            ?? throw new Exception("Verification code not found for this email.");
+
+        return  code.IsVerified;
     }
 
     public async Task ResendOtpAsync(string email)
@@ -75,11 +76,12 @@ public class EmailOtpService : IEmailOtpService
                     Code = otp,
                     ExpireAt = DateTime.UtcNow.AddMinutes(2),
                     IsUsed = false,
+                    IsVerified = true, // Email tasdiqlanganini belgilash
                     CreateDate = DateTime.UtcNow // BaseEntity dan meros
                 };
 
                 // Repository orqali saqlash
-                await verificationCodeRepository.AddCodeAsync(email, otp);
+                await verificationCodeRepository.AddCodeAsync(code);
                 await _unitOfWork.SaveChangesAsync(); // saqlash
             }
 

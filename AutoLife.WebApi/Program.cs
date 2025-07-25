@@ -1,8 +1,11 @@
-﻿using AutoLife.Identity.IdentityDependencyInjection;
+﻿using AutoLife.Api.Extensions;
+using AutoLife.Api.Middleware;
+using AutoLife.Identity.IdentityDependencyInjection;
 using AutoLife.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 
 namespace AutoLife.WebApi
 {
@@ -12,14 +15,16 @@ namespace AutoLife.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // 🔌 ConnectionString, DbContext, Service/Repository'larni ro‘yxatdan o‘tkazish
+            // 🔌 ConnectionString, Service/Repository
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddIdentityServices(builder.Configuration);
 
             builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                      .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
 
-            // 🔐 JWT sozlamalari
+            ServiceCollectionExtensions2.AddSwaggerWithJwt(builder.Services);
+
+            // 🔐 JWT
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
@@ -37,17 +42,18 @@ namespace AutoLife.WebApi
                     };
                 });
 
-            // 🔑 Ruxsat siyosatini faollashtirish
             builder.Services.AddAuthorization();
 
-            // 🧪 Swagger va Controllerlar
+            // 🧪 Swagger
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.OperationFilter<AddFileParamTypesOperationFilter>();
+            });
 
             var app = builder.Build();
 
-            // 🌐 Middlewares
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -55,11 +61,8 @@ namespace AutoLife.WebApi
             }
 
             app.UseHttpsRedirection();
-
-            // 💡 JWT uchun authentication va authorization qo‘shish
-            app.UseAuthentication(); // ⚠️ Har doim `UseAuthorization` dan oldin
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
             app.Run();
         }

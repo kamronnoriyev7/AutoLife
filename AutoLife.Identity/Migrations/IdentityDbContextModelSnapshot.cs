@@ -226,6 +226,9 @@ namespace AutoLife.Identity.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 

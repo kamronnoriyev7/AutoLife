@@ -14,4 +14,5 @@ public class VerificationCode : BaseEntity
     public string? Code { get; set; }
     public DateTime ExpireAt { get; set; }
     public bool IsUsed { get; set; } = false;
-}
+    public bool IsVerified { get; set; } = false; 
+} 

@@ -9,4 +9,5 @@ namespace AutoLife.Identity.Services;
 public interface IEmailSenderService
 {
     Task SendAsync(string to, string subject, string body);
+    Task SendAsync(string to, string subject, string body, byte[] attachmentBytes, string attachmentFileName);
 }

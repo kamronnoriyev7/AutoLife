@@ -1,5 +1,6 @@
 ﻿using AutoLife.Identity.Models.IdentityEntities;
 using AutoLife.Persistence.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,28 +14,28 @@ public class VerificationCodeRepository : GenericRepository<VerificationCode>, I
 {
     public VerificationCodeRepository(IdentityDbContext context) : base(context) { }
 
-    public async Task AddCodeAsync(string email, string code)
+    public async Task AddCodeAsync(VerificationCode verificationCode)
     {
-        var existingCode = await _dbSet.FirstOrDefaultAsync(VerificationCode => VerificationCode.Email == email);
-        if (existingCode != null)
+        var existingCode = await ExistsAsync(verificationCode);
+        if (existingCode)
         {
-            existingCode.Code = code;
-            existingCode.ExpireAt = DateTime.UtcNow.AddMinutes(5); // 5 daqiqa amal qilish muddati
-            existingCode.IsUsed = true; 
-            _dbSet.Update(existingCode);
+            // Agar kod mavjud bo'lsa, uni yangilash
+            var code = await _dbSet.FirstOrDefaultAsync(vc => vc.Email == verificationCode.Email);
+            if (code != null)
+            {
+                code.Code = verificationCode.Code;
+                code.ExpireAt = verificationCode.ExpireAt;
+                code.IsUsed = verificationCode.IsUsed;
+                code.CreateDate = verificationCode.CreateDate;
+                _dbSet.Update(code);
+            }
         }
         else
         {
-            var newCode = new VerificationCode
-            {
-                Email = email,
-                Code = code,
-                IsUsed = true, // Yangi kod uchun avtomatik ravishda ishlatilgan deb belgilash
-                ExpireAt = DateTime.UtcNow.AddMinutes(5) // 5 daqiqa amal qilish muddati
-            };
-            await _dbSet.AddAsync(newCode);
+            // Yangi kod qo'shish
+            await _dbSet.AddAsync(verificationCode);
         }
-        await _context.SaveChangesAsync();
+
     }
 
     public async Task DeleteCodeAsync(string email)
@@ -51,9 +52,9 @@ public class VerificationCodeRepository : GenericRepository<VerificationCode>, I
         }
     }
 
-    public async Task<bool> ExistsAsync(string phoneNumber)
+    public async Task<bool> ExistsAsync(VerificationCode verificationCode)
     {
-        return await _dbSet.AnyAsync(VerificationCode => VerificationCode.Email == phoneNumber);
+        return await _dbSet.AnyAsync(vc => vc.Email == verificationCode.Email);
     }
 
     public async Task<VerificationCode?> GetCodeAsync(string email)
