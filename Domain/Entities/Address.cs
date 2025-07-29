@@ -30,6 +30,7 @@ public class Address : BaseEntity
 
     public Guid? CompanyId { get; set; }
     public Company? Company { get; set; } 
+
     public ICollection<Parking>? Parkings { get; set; } = new List<Parking>();
     public ICollection<ServiceCenter>? ServiceCenters { get; set; } = new List<ServiceCenter>();
     public ICollection<FuelStation>? FuelStations { get; set; } = new List<FuelStation>();

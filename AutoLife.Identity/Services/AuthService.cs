@@ -61,6 +61,7 @@ public class AuthService : IAuthService
             IsActive = true,
             IsEmailConfirmed = true, // Assuming email is verified during registration
             RoleId = Guid.Parse("C5BBA2E5-09FD-4AA7-876E-F03CEB840160"), // Default role ID, should be replaced with actual role logic
+            UserId = Guid.NewGuid() // Assuming a new UserId is generated for the user
         };
 
         isEmailVerified.IsVerified = true; // Mark email as verified

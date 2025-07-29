@@ -1,4 +1,5 @@
-﻿using AutoLife.Identity.Models.AuthDTOs.Requests;
+﻿using AutoLife.Application.DTOs.UsersDTOs;
+using AutoLife.Identity.Models.AuthDTOs.Requests;
 using AutoLife.Identity.Models.AuthDTOs.Responses;
 using AutoLife.Identity.Models.IdentityEntities;
 using AutoLife.Identity.Repositories;
@@ -90,7 +91,7 @@ public class IdentityUserService : IIdentityUserService
             return Enumerable.Empty<UserInfoResponse>();
         return users.Select(user => new UserInfoResponse
         {
-            Id = user.Id.ToString(),
+            Id = user.Id,
             UserName = user.UserName,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
@@ -99,28 +100,114 @@ public class IdentityUserService : IIdentityUserService
         });
     }
 
-    public Task<UserInfoResponse?> GetByIdAsync(Guid id)
+    public async Task<UserInfoResponse?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        if (id == Guid.Empty)
+            throw new ArgumentException("Id cannot be empty", nameof(id));
+
+        var user = await _identityUserRepository.GetByIdAsync(id);
+        if (user is null)
+            return null;
+
+        return new UserInfoResponse
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            CreatedAt = user.CreatedAt,
+        };
     }
 
-    public Task<bool> IsEmailExistsAsync(string email)
+    public async Task<Guid> GetIdentityIdByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("Email cannot be null or empty", nameof(email));
+
+        var user = await _identityUserRepository.GetByEmailAsync(email);
+
+        if (user is null)
+            throw new KeyNotFoundException($"User with email {email} not found.");
+
+        return user.Id;
     }
 
-    public Task<bool> IsUserNameExistsAsync(string userName)
+    public async Task<Guid> GetIdentityIdByPhoneNumberAsync(string phoneNumber)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(phoneNumber))
+            throw new ArgumentException("PhoneNumber cannot be null or empty", nameof(phoneNumber));
+
+        var user = await _identityUserRepository.GetByPhoneNumberAsync(phoneNumber);
+
+        if (user is null)
+            throw new KeyNotFoundException($"User with phone number {phoneNumber} not found.");
+        return user.Id;
     }
 
-    public Task Remove(Guid id)
+    public async Task<Guid> GetUserIdByIdentityIdAsync(string userName)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(userName))
+            throw new ArgumentException("UserName cannot be null or empty", nameof(userName));
+
+        var user = await _identityUserRepository.GetByUserNameAsync(userName);
+
+        if (user is null)
+            throw new KeyNotFoundException($"User with UserName {userName} not found.");
+
+        return user.UserId;
     }
 
-    public Task<bool> UpdateAsync(Guid id, UserInfoResponse dto)
+    public async Task<bool> IsEmailExistsAsync(string email)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("Email cannot be null or empty", nameof(email));
+
+        var user = await _identityUserRepository.GetByEmailAsync(email);
+        return user != null;
+    }
+
+    public async Task<bool> IsUserNameExistsAsync(string userName)
+    {
+        if (string.IsNullOrWhiteSpace(userName))
+            throw new ArgumentException("UserName cannot be null or empty", nameof(userName));
+
+        var user = await _identityUserRepository.GetByUserNameAsync(userName);
+        return user != null;
+    }
+
+    public async Task Remove(Guid id)
+    {
+        if (id == Guid.Empty)
+            throw new ArgumentException("Id cannot be empty", nameof(id));
+
+        var user = await _identityUserRepository.GetByIdAsync(id);
+
+        if (user is null)
+            throw new KeyNotFoundException($"User with ID {id} not found.");
+
+        user.IsDeleted = true; // Soft delete
+        _identityUserRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task<bool> UpdateAsync(Guid id, IdentityUserUpdateDto dto)
+    {
+        if (id == Guid.Empty)
+            throw new ArgumentException("Id cannot be empty", nameof(id));
+
+        if (dto is null)
+            throw new ArgumentNullException(nameof(dto), "UserInfoResponse cannot be null");
+
+        var user = await _identityUserRepository.GetByIdAsync(id);
+        if (user is null)
+            throw new KeyNotFoundException($"User with ID {id} not found.");
+
+        user.UserName = dto.UserName ?? user.UserName;
+        user.Email = dto.Email ?? user.Email;
+        user.PhoneNumber = dto.PhoneNumber ?? user.PhoneNumber;
+
+        _identityUserRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync();
+        return true;
     }
 }

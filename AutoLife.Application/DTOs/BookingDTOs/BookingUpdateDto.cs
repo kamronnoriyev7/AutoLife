@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Application.DTOs.BookingDTOs;
 
-public class BookingFilterParkingDto
+public class BookingUpdateDto
 {
-    public Guid? UserId { get; set; }
-    public Guid? ParkingId { get; set; }
-
+    public string Description { get; set; } = string.Empty;
+    public DateTime From { get; set; }
+    public DateTime To { get; set; }
+    public int? SpotCount { get; set; }
+    public decimal TotalPrice { get; set; }
     public BookingStatus? Status { get; set; }
-
-    public DateTime? FromDate { get; set; }
-    public DateTime? ToDate { get; set; }
 }
-

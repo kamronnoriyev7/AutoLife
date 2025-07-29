@@ -14,8 +14,8 @@ public class Parking : BaseEntity
     public Guid AddressId { get; set; }
     public Address Address { get; set; } = new();
 
-    public Guid? UserId { get; set; } // Foreign key to the User entity
-    public User? User { get; set; } = null; // Nullable to allow for parkings not associated with a user
+    public Guid? UserId { get; set; } 
+    public User? User { get; set; } = null; 
 
     public decimal HourlyRate { get; set; }
     public decimal DailyRate { get; set; }
@@ -25,21 +25,21 @@ public class Parking : BaseEntity
     public int TotalSpaces { get; set; }
     public int AvailableSpaces { get; set; }
 
-    public string OpeningTime { get; set; } = default!;  // masalan: "08:00"
-    public string ClosingTime { get; set; } = default!;  // masalan: "23:00"
+    public string OpeningTime { get; set; } = default!;
+    public string ClosingTime { get; set; } = default!;  
 
     public bool? IsPreBookingAllowed { get; set; } 
 
     public double AverageRating { get; set; }
 
     public Guid? CompanyId { get; set; }
-    public Company? Company { get; set; } = null; // Nullable to allow for parkings not associated with a company
+    public Company? Company { get; set; } = null; 
 
     public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     public ICollection<Image>? Images { get; set; }
     public ICollection<News>? News { get; set; } = new List<News>();
-    public ICollection<Booking>? Bookings { get; set; } = new List<Booking>(); // Collection of bookings associated with the parking
-    public ICollection<Favorite>? Favorites { get; set; } = new List<Favorite>(); // Collection of favorites associated with the parking
-    public ICollection<Notification>? Notifications { get; set; } = new List<Notification>(); // Collection of notifications associated with the parking
+    public ICollection<Booking>? Bookings { get; set; } = new List<Booking>(); 
+    public ICollection<Favorite>? Favorites { get; set; } = new List<Favorite>(); 
+    public ICollection<Notification>? Notifications { get; set; } = new List<Notification>();
 }
 

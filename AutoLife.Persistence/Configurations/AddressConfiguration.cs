@@ -56,9 +56,10 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
 
         // Company (N:1 optional)
         builder.HasOne(a => a.Company)
-            .WithMany(c => c.Addresses)
-            .HasForeignKey(a => a.CompanyId)
-            .OnDelete(DeleteBehavior.NoAction);
+           .WithOne(c => c.Address)
+           .HasForeignKey<Address>(a => a.CompanyId)
+           .OnDelete(DeleteBehavior.NoAction);
+
 
         // Parkings
         builder.HasMany(a => a.Parkings)

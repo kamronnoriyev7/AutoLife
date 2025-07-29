@@ -16,7 +16,7 @@ public class News : BaseEntity
     public User? User { get; set; }
 
     public Guid? CompanyId { get; set; }
-    public Company? Company { get; set; } // Agar yangilik kompaniyaga tegishli bo'lsa    
+    public Company? Company { get; set; }   
 
     public Guid? FuelStationId { get; set; } 
     public FuelStation? FuelStation { get; set; } 
@@ -30,7 +30,7 @@ public class News : BaseEntity
     public ICollection<Image>? Images { get; set; }
 
     public Guid? VehicleId { get; set; }
-    public Vehicle? Vehicle { get; set; } // Agar yangilik transport vositasiga tegishli bo'lsa
+    public Vehicle? Vehicle { get; set; } 
 
 }
 

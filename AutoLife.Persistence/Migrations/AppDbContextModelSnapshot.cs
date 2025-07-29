@@ -72,7 +72,8 @@ namespace AutoLife.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("CompanyId")
+                        .IsUnique();
 
                     b.HasIndex("CountryId");
 
@@ -142,6 +143,9 @@ namespace AutoLife.Persistence.Migrations
                     b.Property<Guid>("BasaEntityId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("BookingType")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("CreateDate")
                         .IsRequired()
                         .HasColumnType("timestamp with time zone");
@@ -176,6 +180,9 @@ namespace AutoLife.Persistence.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<Guid>("TargetId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("timestamp with time zone");
@@ -1250,8 +1257,8 @@ namespace AutoLife.Persistence.Migrations
             modelBuilder.Entity("AutoLife.Domain.Entities.Address", b =>
                 {
                     b.HasOne("AutoLife.Domain.Entities.Company", "Company")
-                        .WithMany("Addresses")
-                        .HasForeignKey("CompanyId")
+                        .WithOne("Address")
+                        .HasForeignKey("AutoLife.Domain.Entities.Address", "CompanyId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AutoLife.Domain.Entities.Country", "Country")
@@ -1793,7 +1800,7 @@ namespace AutoLife.Persistence.Migrations
 
             modelBuilder.Entity("AutoLife.Domain.Entities.Company", b =>
                 {
-                    b.Navigation("Addresses");
+                    b.Navigation("Address");
 
                     b.Navigation("FuelStations");
 

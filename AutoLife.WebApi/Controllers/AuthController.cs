@@ -1,5 +1,4 @@
-﻿using AutoLife.Api.Controllers.BaseController;
-using AutoLife.Api.Extensions;
+﻿using AutoLife.Api.Extensions;
 using AutoLife.Identity.Models.AuthDTOs.Requests;
 using AutoLife.Identity.Services;
 using Microsoft.AspNetCore.Authorization;

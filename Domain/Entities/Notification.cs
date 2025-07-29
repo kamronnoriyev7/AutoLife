@@ -16,22 +16,22 @@ public class Notification : BaseEntity
     public bool IsRead { get; set; } = false;
 
     public Guid ? VehicleId { get; set; }
-    public Vehicle? Vehicle { get; set; } = null; // Agar bu bildirishnoma transport vositasiga tegishli bo'lsa
+    public Vehicle? Vehicle { get; set; } = null; 
 
     public Guid ? ServiceCenterId { get; set; }
-    public ServiceCenter? Service { get; set; } = null; // Agar bu bildirishnoma xizmatga tegishli bo'lsa
+    public ServiceCenter? Service { get; set; } = null; 
 
 
-    public Guid? BookingId { get; set; } = null; // Agar bu bildirishnoma buyurtmaga tegishli bo'lsa
-    public Booking? Booking { get; set; } = null; // Agar bu bildirishnoma buyurtmaga tegishli bo'lsa
+    public Guid? BookingId { get; set; } = null; 
+    public Booking? Booking { get; set; } = null;
 
-    public Guid ? FuelStationId { get; set; } = null; // Agar bu bildirishnoma yoqilg'i quyish stantsiyasiga tegishli bo'lsa
-    public FuelStation? FuelStation { get; set; } = null; // Agar bu bildirishnoma yoqilg'i quyish stantsiyasiga tegishli bo'lsa
+    public Guid ? FuelStationId { get; set; } = null; 
+    public FuelStation? FuelStation { get; set; } = null; 
 
-    public Guid ? ParkingId { get; set; } = null; // Agar bu bildirishnoma avtoturargohga tegishli bo'lsa
-    public Parking? Parking { get; set; } = null; // Agar bu bildirishnoma avtoturargohga tegishli bo'lsa
+    public Guid ? ParkingId { get; set; } = null; 
+    public Parking? Parking { get; set; } = null;
 
-    public Guid ? CompanyId { get; set; } = null; // Agar bu bildirishnoma kompaniyaga tegishli bo'lsa
-    public Company? Company { get; set; } = null; // Agar bu bildirishnoma kompaniyaga tegishli bo'lsa
+    public Guid ? CompanyId { get; set; } = null; 
+    public Company? Company { get; set; } = null; 
 
 }
