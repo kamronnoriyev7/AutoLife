@@ -19,6 +19,6 @@ public class FuelPrice : BaseEntity
     public FuelSubType FuelSubType { get; set; } = default!;
 
     public decimal Price { get; set; }
-    public DateOnly Date { get; set; } // Narxning amal qilish sanasi
+    public DateOnly Date { get; set; } 
 
 }

@@ -15,17 +15,17 @@ public class Favorite : BaseEntity
     public Guid UserId { get; set; }
     public User User { get; set; } = default!;
 
-    public FavoriteType Type { get; set; }   // Nimani yoqtirdi: Station, Parking, Vehicle, Service]
+    public FavoriteType Type { get; set; }  
 
-    public Guid? FuelStationId { get; set; }       // Qaysi IDdagi objectni yoqtirdi
-    public FuelStation? FuelStation { get; set; } = null; // Agar bu yoqtirish yoqilg'i quyish stantsiyasiga tegishli bo'lsa
+    public Guid? FuelStationId { get; set; }     
+    public FuelStation? FuelStation { get; set; } = null; 
 
-    public Guid? ParkingId { get; set; }           // Qaysi IDdagi objectni yoqtirdi
-    public Parking? Parking { get; set; } = null; // Agar bu yoqtirish avtoturargohga tegishli bo'lsa
+    public Guid? ParkingId { get; set; }      
+    public Parking? Parking { get; set; } = null; 
 
-    public Guid? VehicleId { get; set; }           // Qaysi IDdagi objectni yoqtirdi
-    public Vehicle? Vehicle { get; set; } = null; // Agar bu yoqtirish transport vositasiga tegishli bo'lsa
+    public Guid? VehicleId { get; set; }        
+    public Vehicle? Vehicle { get; set; } = null; 
 
-    public Guid? ServiceCenterId { get; set; } // Qaysi IDdagi objectni yoqtirdi
-    public ServiceCenter? ServiceCenter { get; set;} = null; // Agar bu yoqtirish xizmat ko'rsatish markaziga tegishli bo'lsa
+    public Guid? ServiceCenterId { get; set; } 
+    public ServiceCenter? ServiceCenter { get; set;} = null; 
 }

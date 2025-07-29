@@ -9,24 +9,25 @@ namespace AutoLife.Domain.Entities;
 
 public class Company : BaseEntity
 {
-    public Guid Id { get; set; }  // Default value for Id, will be set by the database
-    public string Name { get; set; } = default!; // Company name
-    public string? Description { get; set; } // Optional description of the company
-    public string? PhoneNumber { get; set; } // Optional phone number for the company
-    public string? Email { get; set; } // Optional email address for the company
-    public string? Website { get; set; } // Optional website URL for the company
+    public Guid Id { get; set; }  
+    public string Name { get; set; } = default!; 
+    public string? Description { get; set; } 
+    public string? PhoneNumber { get; set; } 
+    public string? Email { get; set; } 
+    public string? Website { get; set; } 
     public string? LogoUrl { get; set; }
 
-    public Guid? UserId { get; set; } // Foreign key to the User entity
-    public User? User { get; set; } // Navigation property to the User entity
+    public Guid? UserId { get; set; } 
+    public User? User { get; set; } 
 
-    public ICollection<Rating>? Ratings { get; set; } = new List<Rating>(); // Collection of ratings associated with the company
-    public ICollection<Notification>? Notifications { get; set; } = new List<Notification>(); // Collection of notifications associated with the company
-    public ICollection<News>? NewsList { get; set; } = new List<News>(); // Collection of news articles associated with the company
-    public ICollection<Parking>? Parkings { get; set; } = new List<Parking>(); // Collection of parkings associated with the company
-    public ICollection<Vehicle>? Vehicles { get; set; } = new List<Vehicle>(); // Collection of vehicles associated with the company
-    public ICollection<FuelStation>? FuelStations { get; set; } = new List<FuelStation>(); // Collection of fuel stations associated with the company
-    public ICollection<ServiceCenter>? ServiceCenters { get; set; } = new List<ServiceCenter>(); // Collection of service centers associated with the company
-    public ICollection<Address>? Addresses { get; set; } = new List<Address>(); // Collection of addresses associated with the company
-    public ICollection<Image>? Images { get; set; } = new List<Image>(); // Collection of images associated with the company
+    public Address? Address { get; set; } 
+
+    public ICollection<Rating>? Ratings { get; set; } = new List<Rating>();
+    public ICollection<Notification>? Notifications { get; set; } = new List<Notification>(); 
+    public ICollection<News>? NewsList { get; set; } = new List<News>();
+    public ICollection<Parking>? Parkings { get; set; } = new List<Parking>(); 
+    public ICollection<Vehicle>? Vehicles { get; set; } = new List<Vehicle>(); 
+    public ICollection<FuelStation>? FuelStations { get; set; } = new List<FuelStation>(); 
+    public ICollection<ServiceCenter>? ServiceCenters { get; set; } = new List<ServiceCenter>(); 
+    public ICollection<Image>? Images { get; set; } = new List<Image>(); 
 }

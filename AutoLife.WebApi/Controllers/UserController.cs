@@ -16,11 +16,12 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
+    [HttpPost]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Create([FromForm] UserCreateDto dto)
     {
-        var user = await _userService.CreateUserAsync(dto);
-        return Ok(user);
+        var result = await _userService.CreateUserAsync(dto);
+        return CreatedAtAction(nameof(Create), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]
@@ -59,10 +60,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateUser([FromBody] UserCreateDto dto)
+    public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDto dto)
     {
         var result = await _userService.UpdateUserAsync(dto);
-        return result ? Ok("User updated successfully.") : BadRequest("Update failed.");
+
+        return Ok(result);
     }
 
     [HttpDelete("{id:guid}")]

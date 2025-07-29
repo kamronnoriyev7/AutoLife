@@ -11,6 +11,8 @@ public class FuelType : BaseEntity
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;
+    public Guid FuelStationId { get; set; }
+    public FuelStation FuelStation { get; set; } = default!;
 
     public ICollection<FuelSubType> FuelSubTypes { get; set; } = new List<FuelSubType>();
 }

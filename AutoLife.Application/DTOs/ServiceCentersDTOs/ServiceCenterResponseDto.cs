@@ -1,4 +1,5 @@
 ﻿using AutoLife.Application.DTOs.CommonDTOs;
+using AutoLife.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,20 @@ public class ServiceCenterResponseDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
-    public string ServiceType { get; set; } = default!;
-    public string Phone { get; set; } = default!;
-    public GeoLocationDto Location { get; set; } = new();
-    public double AverageRating { get; set; }
+    public string? Description { get; set; }
+    public string? PhoneNumber { get; set; }
+
+    public Guid? UserId { get; set; }
+    public string? UserFullName { get; set; }
+
+    public Guid? AddressId { get; set; }
+    public string? AddressText { get; set; }
+
+    public Guid? CompanyId { get; set; }
+    public string? CompanyName { get; set; }
+
+    public ServiceType ServiceType { get; set; }
+
 }
 
 

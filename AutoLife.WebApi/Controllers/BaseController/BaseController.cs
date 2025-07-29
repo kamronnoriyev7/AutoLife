@@ -7,6 +7,5 @@ namespace AutoLife.Api.Controllers.BaseController
     [ApiController]
     public class BaseController : ControllerBase
     {
-
     }
 }

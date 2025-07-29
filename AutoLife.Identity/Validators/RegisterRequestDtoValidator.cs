@@ -15,14 +15,6 @@ public class RegisterRequestDtoValidator : AbstractValidator<RegisterRequestDto>
 {
     public RegisterRequestDtoValidator()
     {
-        RuleFor(x => x.FirstName)
-            .NotEmpty().WithMessage("Ism bo'sh bo'lmasligi kerak")
-            .MaximumLength(50).WithMessage("Ism 50 belgidan oshmasligi kerak");
-
-        RuleFor(x => x.LastName)
-            .NotEmpty().WithMessage("Familiya bo'sh bo'lmasligi kerak")
-            .MaximumLength(50).WithMessage("Familiya 50 belgidan oshmasligi kerak");
-
         RuleFor(x => x.UserName)
             .NotEmpty().WithMessage("Foydalanuvchi nomi kerak")
             .MinimumLength(5).WithMessage("UserName kamida 5 ta belgidan iborat bo'lishi kerak");
