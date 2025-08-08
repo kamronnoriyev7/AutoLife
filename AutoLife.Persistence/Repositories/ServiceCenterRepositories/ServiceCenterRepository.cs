@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.ServiceCenterRepositories;
 
-internal class ServiceCenterRepository : GenericRepository<ServiceCenter>, IServiceCenterRepository
+public class ServiceCenterRepository : GenericRepository<ServiceCenter>, IServiceCenterRepository
 {
     public ServiceCenterRepository(DbContext context) : base(context)
     {

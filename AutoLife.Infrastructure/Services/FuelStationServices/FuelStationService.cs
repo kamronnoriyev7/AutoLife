@@ -1,13 +1,13 @@
 ﻿using AutoLife.Application.DTOs.FuelStationsDTOs;
 using AutoLife.Domain.Entities;
+using AutoLife.Infrastructure.Mappers;
 using AutoLife.Persistence.DataBaseContext;
 using AutoLife.Persistence.Repositories;
 using AutoLife.Persistence.UnitOfWork;
-using System;
-using System.Collections.Generic;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection.Metadata.Ecma335;
 
 namespace AutoLife.Infrastructure.Services.FuelStationServices;
 
@@ -15,11 +15,13 @@ public class FuelStationService : IFuelStationService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
     private readonly IGenericRepository<FuelStation> _fuelStationRepository;
+    private readonly IMappingService _mappingService;
 
-    public FuelStationService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelStation> fuelStationRepository)
+    public FuelStationService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelStation> fuelStationRepository, IMappingService mappingService)
     {
         _unitOfWork = unitOfWork;
         _fuelStationRepository = fuelStationRepository;
+        _mappingService = mappingService;
     }
 
     public async Task AddFuelStationAsync(CreateFuelStationDto fuelStationDto)
@@ -53,7 +55,7 @@ public class FuelStationService : IFuelStationService
         if (fuelStation == null)
             throw new KeyNotFoundException($"Fuel station with ID {id} not found.");
 
-        fuelStation.IsDeleted = true; 
+        fuelStation.IsDeleted = true;
         fuelStation.DeleteDate = DateTime.UtcNow;
 
         await _fuelStationRepository.SoftDeleteAsync(fuelStation.Id);
@@ -126,20 +128,67 @@ public class FuelStationService : IFuelStationService
         if (location == null)
             throw new ArgumentNullException(nameof(location), "Location cannot be null.");
 
-        var fuelStations = await _fuelStationRepository.FindAsync(fs => fs.Address.GeoLocation.Latitude == location.Latitude && fs.Address.GeoLocation.Longitude == location.Longitude && !fs.IsDeleted);
+        var fuelStations = await _fuelStationRepository.FindAsync(
+            fs => fs.Address != null
+               && fs.Address.GeoLocation != null
+               && fs.Address.GeoLocation.Latitude == location.Latitude
+               && fs.Address.GeoLocation.Longitude == location.Longitude
+               && !fs.IsDeleted
+        );
 
-        return fuelStations.Select(fs => new FuelStationResponseDto
-        {
-            Id = fs.Id,
-            Name = fs.Name,
-            AddressId = fs.AddressId,
-            CompanyId = fs.CompanyId,
-            FuelTypeId = fs.FuelTypeId,
-            FuelSubTypeId = fs.FuelSubTypeId,
-            UserId = fs.UserId,
-            OperatorName = fs.OperatorName,
-            PhoneNumber = fs.PhoneNumber,
-        });
+
+        return _mappingService.Map<IEnumerable<FuelStationResponseDto>>(fuelStations);
+    }
+
+    public async Task<ICollection<FuelStationResponseDto>> GetFuelStationsByNearbyLocationAsync(
+        double latitude,
+        double longitude,
+        double radiusKm,
+        CancellationToken cancellationToken = default)
+      {
+        if (radiusKm <= 0)
+            throw new ArgumentException("Radius must be greater than zero.", nameof(radiusKm));
+
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)
+            throw new ArgumentException("Latitude and Longitude must be valid coordinates.");
+
+        const string sql = @"
+            SELECT fs.Id
+            FROM FuelStations fs
+            JOIN Addresses a ON fs.AddressId = a.Id
+            JOIN GeoLocations g ON a.GeoLocationId = g.Id
+            WHERE 
+                fs.IsDeleted = 0 AND
+                a.IsDeleted = 0 AND
+                g.IsDeleted = 0 AND
+                (
+                    6371 * 2 * ASIN(SQRT(
+                        POWER(SIN(RADIANS(g.Latitude - @p0) / 2), 2) +
+                        COS(RADIANS(@p0)) * COS(RADIANS(g.Latitude)) *
+                        POWER(SIN(RADIANS(g.Longitude - @p1) / 2), 2)
+                    ))
+                ) <= @p2
+        ";
+
+        var rawIds = await _fuelStationRepository
+            .FromSqlRawAsync<FuelStationIdResult>(sql, latitude, longitude, radiusKm);
+
+        if (rawIds == null || !rawIds.Any())
+            return new List<FuelStationResponseDto>();
+
+        var stationIds = rawIds.Select(r => r.Id).ToList();
+
+        if (!stationIds.Any())
+            return new List<FuelStationResponseDto>();
+
+        var fuelStations = await _fuelStationRepository
+            .GetQueryable()
+            .Include(fs => fs.Address)
+            .ThenInclude(a => a.GeoLocation)
+            .Where(fs => stationIds.Contains(fs.Id) && !fs.IsDeleted)
+            .ToListAsync(cancellationToken);
+
+        return _mappingService.Map<ICollection<FuelStationResponseDto>>(fuelStations);
     }
 
     public async Task<FuelStationResponseDto> UpdateFuelStationAsync(Guid id, UpdateFuelStationDto fuelStationDto)

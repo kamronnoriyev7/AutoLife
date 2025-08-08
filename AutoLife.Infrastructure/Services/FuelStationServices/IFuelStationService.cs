@@ -12,4 +12,9 @@ public interface IFuelStationService
     Task<IEnumerable<FuelStationResponseDto>> GetAllFuelStationsAsync();
     Task<IEnumerable<FuelStationResponseDto>> GetFuelStationsByLocationAsync(GeoLocation location);
     Task<IEnumerable<FuelStationResponseDto>> GetFuelStationsByFuelTypeAsync(FuelType fuelType);
+    Task<ICollection<FuelStationResponseDto>> GetFuelStationsByNearbyLocationAsync(
+            double latitude,
+            double longitude,
+            double radiusKm,
+            CancellationToken cancellationToken = default);
 }

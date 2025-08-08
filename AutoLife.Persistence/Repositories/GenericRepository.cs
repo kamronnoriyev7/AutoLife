@@ -124,10 +124,14 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         _dbSet.Update(entity);
     }
 
-    public async Task<IEnumerable<T>> FromSqlRawAsync(string sql, params object[] parameters)
+    public async Task<List<T>> FromSqlRawAsync<T>(string sql, params object[] parameters) where T : class
     {
-        return await _dbSet.FromSqlRaw(sql, parameters).ToListAsync();
+        return await _context.Set<T>().FromSqlRaw(sql, parameters).ToListAsync();
     }
 
+    public IQueryable<T> GetQueryable()
+    {
+        return _dbSet.AsQueryable();
+    }
 }
 

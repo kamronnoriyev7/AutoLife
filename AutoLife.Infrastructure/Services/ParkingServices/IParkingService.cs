@@ -12,4 +12,9 @@ public interface IParkingService
     Task<IEnumerable<Parking>> GetAllParkingsAsync();
     Task<IEnumerable<Parking>> GetParkingsByLocationAsync(Country country);
     Task<IEnumerable<Parking>> GetParkingsByTypeAsync(bool type);
+    Task<ICollection<Parking>> GetParkingsByNearbyLocationAsync(
+        double latitude,
+        double longitude,
+        double radiusKm,
+        CancellationToken cancellationToken = default);
 }
