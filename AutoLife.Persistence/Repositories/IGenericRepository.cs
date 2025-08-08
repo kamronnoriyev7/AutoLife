@@ -31,6 +31,8 @@ public interface IGenericRepository<T> where T : BaseEntity
     void UpdateRange(IEnumerable<T> entities);
     Task SoftDeleteAsync(Guid id);
     Task RestoreDeletedAsync(Guid id);
-    Task<IEnumerable<T>> FromSqlRawAsync(string sql, params object[] parameters);
+    Task<List<T>> FromSqlRawAsync<T>(string sql, params object[] parameters) where T : class;
+    IQueryable<T> GetQueryable();
+
 }
 

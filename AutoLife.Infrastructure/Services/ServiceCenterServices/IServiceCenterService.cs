@@ -12,4 +12,9 @@ public interface IServiceCenterService
     Task<IEnumerable<ServiceCenterResponseDto>> GetAllServiceCentersAsync();
     Task<IEnumerable<ServiceCenterResponseDto>> GetServiceCentersByLocationAsync(string location);
     Task<IEnumerable<ServiceCenterResponseDto>> GetServiceCentersByTypeAsync(string type);
+    Task<ICollection<ServiceCenterResponseDto>> GetServiceCentersByNearbyLocationAsync(
+        double latitude,
+        double longitude,
+        double radiusKm,
+        CancellationToken cancellationToken = default);
 }
