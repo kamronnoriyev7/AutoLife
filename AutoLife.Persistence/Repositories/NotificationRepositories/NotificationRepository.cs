@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,6 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.NotificationRepositories;
 
-public class NotificationRepository : GenericRepository<Notification>, INotificationRepository
+public class NotificationRepository(AppDbContext context) : GenericRepository<Notification, AppDbContext>(context), INotificationRepository
 {
-    public NotificationRepository(DbContext context) : base(context)
-    {
-    }
 }

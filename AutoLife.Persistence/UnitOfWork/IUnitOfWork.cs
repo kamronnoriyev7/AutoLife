@@ -11,7 +11,7 @@ namespace AutoLife.Persistence.UnitOfWork;
 
 public interface IUnitOfWork<TContext> : IDisposable where TContext : DbContext
 {
-    IGenericRepository<T> Repository<T>() where T : BaseEntity;
+    IGenericRepository<T, TContext> Repository<T>() where T : BaseEntity;
     Task<int> SaveChangesAsync();
 }
 

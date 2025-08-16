@@ -51,13 +51,6 @@ public class FuelStationController : ControllerBase
         return Ok("Yoqilg'i stansiyasi o'chirildi.");
     }
 
-    [HttpGet("by-fuel-type/{fuelTypeId:guid}")]
-    public async Task<IActionResult> GetByFuelType(Guid fuelTypeId)
-    {
-        var fuelType = new Domain.Entities.FuelType { Id = fuelTypeId };
-        var result = await _fuelStationService.GetFuelStationsByFuelTypeAsync(fuelType);
-        return Ok(result);
-    }
 
     [HttpGet("by-location")]
     public async Task<IActionResult> GetByLocation([FromQuery] double latitude, [FromQuery] double longitude)

@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,6 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.NewsRepositories;
 
-public class NewsRepository : GenericRepository<News>, INewsRepository
+public class NewsRepository(AppDbContext context) : GenericRepository<News, AppDbContext>(context), INewsRepository
 {
-    public NewsRepository(DbContext context) : base(context)
-    {
-    }
 }

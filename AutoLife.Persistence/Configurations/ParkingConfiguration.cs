@@ -99,12 +99,6 @@ public class ParkingConfiguration : IEntityTypeConfiguration<Parking>
             .HasForeignKey(n => n.ParkingId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        // Bookings
-        builder.HasMany(p => p.Bookings)
-            .WithOne(b => b.Parking)
-            .HasForeignKey(b => b.ParkingId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         // Favorites
         builder.HasMany(p => p.Favorites)
             .WithOne(f => f.Parking)

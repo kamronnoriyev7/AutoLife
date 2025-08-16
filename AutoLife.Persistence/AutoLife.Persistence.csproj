@@ -32,4 +32,8 @@
 		<ProjectReference Include="..\Domain\AutoLife.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\App\" />
+	</ItemGroup>
+
 </Project>

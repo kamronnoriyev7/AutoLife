@@ -16,10 +16,10 @@ namespace AutoLife.Infrastructure.Services.ServiceCenterServices;
 public class ServiceCenterService : IServiceCenterService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<ServiceCenter> _serviceCenterRepository;
+    private readonly IGenericRepository<ServiceCenter, AppDbContext> _serviceCenterRepository;
     private readonly IMappingService _mappingService;
 
-    public ServiceCenterService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<ServiceCenter> serviceCenterRepository, IMappingService mappingService)
+    public ServiceCenterService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<ServiceCenter, AppDbContext> serviceCenterRepository, IMappingService mappingService)
     {
         _unitOfWork = unitOfWork;
         _serviceCenterRepository = serviceCenterRepository;

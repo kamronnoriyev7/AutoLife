@@ -8,18 +8,21 @@ namespace AutoLife.Infrastructure.PaymentServices;
 
 public class PaymentService
 {
-    private readonly IEnumerable<IPaymentProvider> _providers;
+    private readonly Dictionary<string, IPaymentProvider> _providers;
 
     public PaymentService(IEnumerable<IPaymentProvider> providers)
     {
-        _providers = providers;
+        // Keylarni Name property orqali sozlaymiz (masalan, "Click", "Payme")
+        _providers = providers.ToDictionary(p => p.Name, StringComparer.OrdinalIgnoreCase);
     }
 
     public IPaymentProvider GetProvider(string name)
     {
-        var provider = _providers.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-        if (provider == null)
-            throw new ArgumentException($"Payment provider '{name}' not found.");
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Provider nomi bo‘sh bo‘lishi mumkin emas.", nameof(name));
+
+        if (!_providers.TryGetValue(name, out var provider))
+            throw new KeyNotFoundException($"'{name}' nomli payment provider topilmadi.");
 
         return provider;
     }

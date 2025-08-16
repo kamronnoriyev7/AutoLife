@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.FuelPriceServices;
 public class FuelPriceService : IFuelPriceService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<FuelPrice> _fuelPriceRepository;
+    private readonly IGenericRepository<FuelPrice, AppDbContext> _fuelPriceRepository;
 
-    public FuelPriceService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelPrice> fuelPriceRepository)
+    public FuelPriceService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelPrice, AppDbContext> fuelPriceRepository)
     {
         _unitOfWork = unitOfWork;
         _fuelPriceRepository = fuelPriceRepository;
@@ -31,7 +31,6 @@ public class FuelPriceService : IFuelPriceService
         {
             Id = Guid.NewGuid(),
             FuelSubTypeId = fuelPriceDto.FuelSubTypeId,
-            FuelStationId = fuelPriceDto.FuelStationId,
             Price = fuelPriceDto.Price,
             CreateDate = DateTime.UtcNow,
         };
@@ -91,18 +90,6 @@ public class FuelPriceService : IFuelPriceService
         return fuelPrices;
     }
 
-    public async Task<IEnumerable<FuelPrice>> GetFuelPricesByStationIdAsync(Guid stationId)
-    {
-        if (stationId == Guid.Empty)
-            throw new ArgumentException("Invalid station ID", nameof(stationId));
-
-        var fuelPrices = await _fuelPriceRepository.FindAsync(fp => fp.FuelStationId == stationId && !fp.IsDeleted);
-
-        if (fuelPrices == null || !fuelPrices.Any())
-            return Enumerable.Empty<FuelPrice>();
-
-        return fuelPrices;
-    }
 
     public async Task<FuelPrice> UpdateFuelPriceAsync(Guid id, FuelPriceCreateDto fuelPriceDto)
     {
@@ -117,7 +104,6 @@ public class FuelPriceService : IFuelPriceService
             throw new KeyNotFoundException($"Fuel price with ID {id} not found.");
 
         existingFuelPrice.FuelSubTypeId = fuelPriceDto.FuelSubTypeId;
-        existingFuelPrice.FuelStationId = fuelPriceDto.FuelStationId;
         existingFuelPrice.Price = fuelPriceDto.Price;
         existingFuelPrice.UpdateDate = DateTime.UtcNow;
 

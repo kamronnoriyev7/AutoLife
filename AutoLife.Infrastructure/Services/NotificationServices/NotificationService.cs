@@ -13,9 +13,9 @@ namespace AutoLife.Infrastructure.Services.NotificationServices;
 public class NotificationService : INotificationService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Notification> _notificationRepository;
+    private readonly IGenericRepository<Notification, AppDbContext> _notificationRepository;
 
-    public NotificationService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Notification> notificationRepository)
+    public NotificationService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Notification, AppDbContext> notificationRepository)
     {
         _unitOfWork = unitOfWork;
         _notificationRepository = notificationRepository;

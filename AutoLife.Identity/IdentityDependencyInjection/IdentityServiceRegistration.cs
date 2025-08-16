@@ -2,6 +2,7 @@
 using AutoLife.Identity.Repositories;
 using AutoLife.Identity.Services;
 using AutoLife.Identity.Validators;
+using AutoLife.Persistence.Repositories;
 using AutoLife.Persistence.UnitOfWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +35,8 @@ public static class IdentityServiceRegistration
         services.AddValidatorsFromAssemblyContaining<RefreshTokenRequestDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<LoginRequestDtoValidator>();
 
-        services.AddScoped<IUnitOfWork<IdentityDbContext>, UnitOfWork<IdentityDbContext>>();
+        services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+        services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, TokenService>();

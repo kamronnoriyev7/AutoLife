@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.RegionRepositories;
 
-public class RegionRepository : GenericRepository<Region>, IRegionRepository
+public class RegionRepository(AppDbContext context) : GenericRepository<Region, AppDbContext>(context), IRegionRepository
 {
-    public RegionRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<IEnumerable<Region>> GetRegionsByCountryIdAsync(Guid countryId)
     {
         if (countryId == Guid.Empty)

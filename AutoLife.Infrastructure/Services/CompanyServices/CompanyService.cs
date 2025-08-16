@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.CompanyServices;
 public class CompanyService : ICompanyService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Company> _companyRepository;
+    private readonly IGenericRepository<Company, AppDbContext> _companyRepository;
 
-    public CompanyService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Company> companyRepository)
+    public CompanyService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Company, AppDbContext> companyRepository)
     {
         _unitOfWork = unitOfWork;
         _companyRepository = companyRepository;

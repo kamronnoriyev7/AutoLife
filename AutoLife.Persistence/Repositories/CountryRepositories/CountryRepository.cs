@@ -11,12 +11,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.CountryRepositories;
 
-public class CountryRepository : GenericRepository<Country>, ICountryRepository
+public class CountryRepository(AppDbContext context) : GenericRepository<Country, AppDbContext>(context), ICountryRepository
 {
-    public CountryRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<Country?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(name))

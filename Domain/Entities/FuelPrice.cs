@@ -11,9 +11,6 @@ namespace AutoLife.Domain.Entities;
 public class FuelPrice : BaseEntity
 {
     public Guid Id { get; set; }
-    public Guid FuelStationId { get; set; }
-
-    public FuelStation FuelStation { get; set; } = default!;
 
     public Guid FuelSubTypeId { get; set; }
     public FuelSubType FuelSubType { get; set; } = default!;

@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.FuelTypeServices;
 public class FuelTypeService : IFuelTypeService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<FuelType> _fuelTypeRepository;
+    private readonly IGenericRepository<FuelType, AppDbContext> _fuelTypeRepository;
 
-    public FuelTypeService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelType> fuelTypeRepository)
+    public FuelTypeService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelType, AppDbContext> fuelTypeRepository)
     {
         _unitOfWork = unitOfWork;
         _fuelTypeRepository = fuelTypeRepository;

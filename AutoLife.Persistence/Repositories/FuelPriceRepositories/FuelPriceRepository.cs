@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.FuelPriceRepositories;
 
-public class FuelPriceRepository : GenericRepository<FuelPrice>, IFuelPriceRepository
+public class FuelPriceRepository(AppDbContext context) : GenericRepository<FuelPrice, AppDbContext>(context), IFuelPriceRepository
 {
-    public FuelPriceRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<IEnumerable<FuelPrice>> GetPricesByFuelSubTypeIdAsync(Guid fuelSubTypeId)
     {
         if (fuelSubTypeId == Guid.Empty)
@@ -24,13 +21,4 @@ public class FuelPriceRepository : GenericRepository<FuelPrice>, IFuelPriceRepos
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<FuelPrice>> GetPricesByStationIdAsync(Guid stationId)
-    {
-        if (stationId == Guid.Empty)
-            throw new ArgumentException("Station ID cannot be empty.", nameof(stationId));
-
-        return await _context.Set<FuelPrice>()
-            .Where(fp => fp.FuelStationId == stationId && !fp.IsDeleted)
-            .ToListAsync();
-    }
 }

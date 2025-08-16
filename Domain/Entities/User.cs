@@ -1,4 +1,5 @@
-﻿using AutoLife.Domain.Enums;
+﻿using AutoLife.Domain.Entities.PaymentTransactions;
+using AutoLife.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ public class User : BaseEntity
     public bool IsActive { get; set; } = true;
 
     public Guid IdentityUserId { get; set; }
+
+    public ICollection<PaymentTransaction> PaymentTransactions { get; set; } = new List<PaymentTransaction>();
 
     public ICollection<Image>? Images { get; set; }  
     public ICollection<Vehicle>? Vehicles { get; set; } = null;

@@ -17,33 +17,38 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.HasKey(b => b.Id);
 
-        builder.Property(b => b.From)
+        builder.Property(b => b.BookingType)
+               .HasConversion<int>() // Enum -> int
                .IsRequired();
 
-        builder.Property(b => b.To)
-               .IsRequired();
-
-        builder.Property(b => b.SpotCount)
-               .IsRequired();
+        builder.Property(b => b.Description)
+               .HasMaxLength(500);
 
         builder.Property(b => b.TotalPrice)
-               .HasColumnType("decimal(18,2)") // Pul uchun aniq format
+               .HasColumnType("decimal(18,2)")
                .IsRequired();
 
         builder.Property(b => b.Status)
-               .HasConversion<int>() // enumni int qilib saqlaymiz
-               .IsRequired();
+               .HasConversion<int>(); // Nullable enum
 
-        // User bilan aloqasi (1:N)
+        // User bilan bog'lanish
         builder.HasOne(b => b.User)
                .WithMany(u => u.Bookings)
                .HasForeignKey(b => b.UserId)
                .OnDelete(DeleteBehavior.Cascade);
 
-        // Hozir ParkingId bor, lekin Parking entitiy yo‘q. Bo‘lsa, mana bunday yoziladi:
-        // builder.HasOne(b => b.Parking)
-        //        .WithMany(p => p.Bookings)
-        //        .HasForeignKey(b => b.ParkingId)
-        //        .OnDelete(DeleteBehavior.Cascade);
+        // Vehicle bilan bog'lanish
+        builder.HasOne(b => b.Vehicle)
+               .WithMany(v => v.Bookings)
+               .HasForeignKey(b => b.VehicleId)
+               .OnDelete(DeleteBehavior.SetNull);
+
+        // Address bilan bog'lanish
+        builder.HasOne(b => b.Address)
+               .WithMany(a => a.Bookings)
+               .HasForeignKey(b => b.AddressId)
+               .OnDelete(DeleteBehavior.SetNull);
+
+        // Notifications va Ratings — ICollection bo‘lgani uchun EF Core avtomatik 1:N qiladi
     }
 }

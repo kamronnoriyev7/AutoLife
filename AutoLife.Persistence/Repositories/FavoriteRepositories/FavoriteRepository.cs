@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.FavoriteRepositories;
 
-public class FavoriteRepository : GenericRepository<Favorite>, IFavoriteRepository
+public class FavoriteRepository : GenericRepository<Favorite, AppDbContext>, IFavoriteRepository
 {
-    public FavoriteRepository(DbContext context) : base(context)
+    public FavoriteRepository(AppDbContext context) : base(context)
     {
     }
 }

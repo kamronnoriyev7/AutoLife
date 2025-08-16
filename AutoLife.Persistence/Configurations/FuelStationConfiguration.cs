@@ -1,6 +1,7 @@
 ﻿using AutoLife.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace AutoLife.Persistence.Configurations;
 
@@ -8,8 +9,10 @@ public class FuelStationConfiguration : IEntityTypeConfiguration<FuelStation>
 {
     public void Configure(EntityTypeBuilder<FuelStation> builder)
     {
+        // Primary Key
         builder.HasKey(fs => fs.Id);
 
+        // Properties
         builder.Property(fs => fs.Name)
                .IsRequired()
                .HasMaxLength(200);
@@ -18,40 +21,65 @@ public class FuelStationConfiguration : IEntityTypeConfiguration<FuelStation>
                .HasMaxLength(100);
 
         builder.Property(fs => fs.PhoneNumber)
-               .HasMaxLength(30);
+               .HasMaxLength(20);
 
-        // Address bilan bog‘lanish (nullable)
+        // Address (many-to-one)
         builder.HasOne(fs => fs.Address)
-           .WithMany(a => a.FuelStations)
-           .HasForeignKey(fs => fs.AddressId)
-           .OnDelete(DeleteBehavior.NoAction);
+               .WithMany(a => a.FuelStations)
+               .HasForeignKey(fs => fs.AddressId)
+               .OnDelete(DeleteBehavior.Restrict);
 
-
-        // User bilan bog‘lanish (nullable)
+        // User (optional, many-to-one)
         builder.HasOne(fs => fs.User)
-               .WithMany()
+               .WithMany(u => u.FuelStations)
                .HasForeignKey(fs => fs.UserId)
-               .OnDelete(DeleteBehavior.NoAction);
+               .OnDelete(DeleteBehavior.SetNull);
 
-        // Company bilan bog‘lanish (nullable)
+        // Company (optional, many-to-one)
         builder.HasOne(fs => fs.Company)
-               .WithMany()
+               .WithMany(c => c.FuelStations)
                .HasForeignKey(fs => fs.CompanyId)
-               .OnDelete(DeleteBehavior.NoAction);
+               .OnDelete(DeleteBehavior.SetNull);
 
-        // FuelType bilan bog‘lanish (required)
-        builder.HasOne(fs => fs.FuelType)
-               .WithMany()
-               .HasForeignKey(fs => fs.FuelTypeId)
-               .OnDelete(DeleteBehavior.NoAction);
+        // FuelTypes (one-to-many)
+        builder.HasMany(fs => fs.FuelTypes)
+               .WithOne(ft => ft.FuelStation)
+               .HasForeignKey(ft => ft.FuelStationId)
+               .OnDelete(DeleteBehavior.Cascade);
 
-        // FuelSubType bilan bog‘lanish (nullable)
-        builder.HasOne(fs => fs.FuelSubType)
-               .WithMany()
-               .HasForeignKey(fs => fs.FuelSubTypeId)
-               .OnDelete(DeleteBehavior.NoAction);
+        // Images (one-to-many)
+        builder.HasMany(fs => fs.Images)
+               .WithOne(i => i.FuelStation)
+               .HasForeignKey(img => img.FuelStationId)
+               .OnDelete(DeleteBehavior.Cascade);
 
-        // FuelPrices, Ratings, etc. - bu ICollection navigatsiyalar EF Core tomonidan avtomatik aniqlanadi,
-        // ammo kerak bo‘lsa, .WithOne().HasForeignKey() tarzida ularga ham alohida konfiguratsiya yozish mumkin.
+        // Ratings (one-to-many)
+        builder.HasMany(fs => fs.Ratings)
+               .WithOne(r => r.FuelStation)
+               .HasForeignKey(r => r.FuelStationId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        // Favorites (one-to-many)
+        builder.HasMany(fs => fs.Favorites)
+               .WithOne(f => f.FuelStation) 
+               .HasForeignKey(fav => fav.FuelStationId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+
+        // Notifications (one-to-many)
+        builder.HasMany(fs => fs.Notifications)
+               .WithOne(n => n.FuelStation)
+               .HasForeignKey(n => n.FuelStationId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        // News (one-to-many)
+        builder.HasMany(fs => fs.News)
+               .WithOne(n => n.FuelStation)
+               .HasForeignKey(news => news.FuelStationId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        // ❌ Booking bilan to‘g‘ridan-to‘g‘ri bog‘lamaymiz
+        // Chunki Booking TargetId orqali ishlaydi
+        builder.Ignore(fs => fs.Bookings);
     }
 }

@@ -8,8 +8,10 @@ public class FuelSubTypeConfiguration : IEntityTypeConfiguration<FuelSubType>
 {
     public void Configure(EntityTypeBuilder<FuelSubType> builder)
     {
+        // Primary Key
         builder.HasKey(fst => fst.Id);
 
+        // Properties
         builder.Property(fst => fst.Name)
                .IsRequired()
                .HasMaxLength(100);
@@ -17,7 +19,16 @@ public class FuelSubTypeConfiguration : IEntityTypeConfiguration<FuelSubType>
         builder.Property(fst => fst.Description)
                .HasMaxLength(500);
 
-        // FuelType bilan bog‘lanish allaqachon FuelTypeConfiguration ichida bor,
-        // bu yerda faqat mavjudligini ko‘rsatish kifoya
+        // Relationship: FuelSubType -> FuelType (many-to-one)
+        builder.HasOne(fst => fst.FuelType)
+               .WithMany(ft => ft.FuelSubTypes)
+               .HasForeignKey(fst => fst.FuelTypeId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        // Relationship: FuelSubType -> FuelPrices (one-to-many)
+        builder.HasMany(fst => fst.FuelPrices)
+               .WithOne(fp => fp.FuelSubType)
+               .HasForeignKey(fp => fp.FuelSubTypeId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

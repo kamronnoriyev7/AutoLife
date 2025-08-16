@@ -30,12 +30,6 @@ public class FuelPriceController : ControllerBase
         return Ok(price);
     }
 
-    [HttpGet("station/{stationId}")]
-    public async Task<ActionResult<IEnumerable<FuelPrice>>> GetByStationId(Guid stationId)
-    {
-        var prices = await _fuelPriceService.GetFuelPricesByStationIdAsync(stationId);
-        return Ok(prices);
-    }
 
     [HttpGet("subtype/{fuelSubTypeId}")]
     public async Task<ActionResult<IEnumerable<FuelPrice>>> GetByFuelSubTypeId(Guid fuelSubTypeId)

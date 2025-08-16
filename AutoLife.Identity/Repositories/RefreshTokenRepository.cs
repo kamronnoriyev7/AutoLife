@@ -10,10 +10,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Repositories;
 
-public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshTokenRepository
+public class RefreshTokenRepository(IdentityDbContext context) : GenericRepository<RefreshToken, IdentityDbContext>(context), IRefreshTokenRepository
 {
-    public RefreshTokenRepository(IdentityDbContext context) : base(context) { }
-
     public async Task<bool> ExistsAsync(Expression<Func<RefreshToken, bool>> predicate)
     {
         return await _dbSet.AnyAsync(predicate);

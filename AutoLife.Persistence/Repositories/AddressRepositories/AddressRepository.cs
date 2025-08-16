@@ -1,5 +1,6 @@
 ﻿using AutoLife.Application.DTOs.AddressDTOs;
 using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.AddressRepositories;
 
-public class AddressRepository : GenericRepository<Address>, IAddressRepository
+public class AddressRepository(AppDbContext context) : GenericRepository<Address, AppDbContext>(context), IAddressRepository
 {
-    public AddressRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<IEnumerable<Address>> GetByLocationAsync(Guid? countryId = null, Guid? regionId = null, Guid? districtId = null, string? street = null)
     {
         var query = _context.Set<Address>().AsQueryable();

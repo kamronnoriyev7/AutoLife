@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.AppFeedbackRepositories;
 
-public class AppFeedbackRepository : GenericRepository<AppFeedback>, IAppFeedbackRepository
+public class AppFeedbackRepository : GenericRepository<AppFeedback, AppDbContext>, IAppFeedbackRepository
 {
-    public AppFeedbackRepository(DbContext context) : base(context)
+    public AppFeedbackRepository(AppDbContext context) : base(context)
     {
     }
 

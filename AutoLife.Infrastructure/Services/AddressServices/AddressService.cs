@@ -14,10 +14,10 @@ namespace AutoLife.Infrastructure.Services.AddressServices;
 
 public class AddressService : IAddressService
 {
-    private readonly UnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Address> _addressRepository;
+    private readonly IUnitOfWork<AppDbContext> _unitOfWork;
+    private readonly IGenericRepository<Address, AppDbContext> _addressRepository;
 
-    public AddressService(UnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Address> addressRepository)
+    public AddressService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Address, AppDbContext> addressRepository)
     {
         _unitOfWork = unitOfWork;
         _addressRepository = addressRepository;
@@ -36,7 +36,7 @@ public class AddressService : IAddressService
     {
         var address = new Address
         {
-            Id = Guid.NewGuid(),
+            BasaEntityId = Guid.NewGuid(),
             UserId = dto.UserId,
             CountryId = dto.CountryId,
             RegionId = dto.RegionId,
@@ -50,7 +50,7 @@ public class AddressService : IAddressService
 
         return new AddressResponseDto
         {
-            Id = address.Id,
+            Id = address.BasaEntityId,
             UserId = address.UserId,
             CountryId = address.CountryId,
             RegionId = address.RegionId,
@@ -80,7 +80,7 @@ public class AddressService : IAddressService
 
         return new AddressResponseDto
         {
-            Id = address.Id,
+            Id = address.BasaEntityId,
             UserId = address.UserId,
             CountryId = address.CountryId,
             RegionId = address.RegionId,
@@ -95,7 +95,7 @@ public class AddressService : IAddressService
 
         return addresses.Select(address => new AddressResponseDto
         {
-            Id = address.Id,
+            Id = address.BasaEntityId,
             UserId = address.UserId,
             CountryId = address.CountryId,
             RegionId = address.RegionId,
@@ -110,7 +110,7 @@ public class AddressService : IAddressService
 
         return addresses.Select(address => new AddressResponseDto
         {
-            Id = address.Id,
+            Id = address.BasaEntityId,
             UserId = address.UserId,
             CountryId = address.CountryId,
             RegionId = address.RegionId,
@@ -136,7 +136,7 @@ public class AddressService : IAddressService
 
         return new AddressResponseDto
         {
-            Id = address.Id,
+            Id = address.BasaEntityId,
             UserId = address.UserId,
             CountryId = address.CountryId,
             RegionId = address.RegionId,

@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.RegionServices;
 public class RegionService : IRegionService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Region> _regionRepository;
+    private readonly IGenericRepository<Region, AppDbContext> _regionRepository;
 
-    public RegionService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Region> regionRepository)
+    public RegionService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Region, AppDbContext> regionRepository)
     {
         _unitOfWork = unitOfWork;
         _regionRepository = regionRepository;

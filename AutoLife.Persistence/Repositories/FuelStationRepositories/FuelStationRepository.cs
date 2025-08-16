@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.FuelStationRepositories;
 
-public class FuelStationRepository : GenericRepository<FuelStation>, IFuelStationRepository
+public class FuelStationRepository : GenericRepository<FuelStation, AppDbContext>, IFuelStationRepository
 {
-    public FuelStationRepository(DbContext context) : base(context)
+    public FuelStationRepository(AppDbContext context) : base(context)
     {
     }
 
@@ -18,9 +19,6 @@ public class FuelStationRepository : GenericRepository<FuelStation>, IFuelStatio
     {
         return await _context.Set<FuelStation>()
             .Include(fs => fs.Address)
-            .Include(fs => fs.FuelPrices)
-            .Include(fs => fs.FuelSubType)
-            .Include(fs => fs.FuelType)
             .Include(fs => fs.Images)
             .Include(fs => fs.Ratings)
             .Include(fs => fs.Favorites)
@@ -39,9 +37,6 @@ public class FuelStationRepository : GenericRepository<FuelStation>, IFuelStatio
 
         return await _context.Set<FuelStation>()
             .Include(fs => fs.Address)
-            .Include(fs => fs.FuelPrices)
-            .Include(fs => fs.FuelSubType)
-            .Include(fs => fs.FuelType)
             .Include(fs => fs.Images)
             .Include(fs => fs.Ratings)
             .Include(fs => fs.Favorites)

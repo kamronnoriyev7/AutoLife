@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.FuelTypeRepositories;
 
-public class FuelTypeRepository : GenericRepository<FuelType>, IFuelTypeRepository
+public class FuelTypeRepository(AppDbContext context) : GenericRepository<FuelType, AppDbContext>(context), IFuelTypeRepository
 {
-    public FuelTypeRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<List<FuelType>> GetAllWithSubTypesAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Set<FuelType>()

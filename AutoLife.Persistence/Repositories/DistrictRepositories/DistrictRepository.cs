@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.DistrictRepositories;
 
-public class DistrictRepository : GenericRepository<District> ,IDistrictRepository
+public class DistrictRepository(AppDbContext context) : GenericRepository<District, AppDbContext>(context) ,IDistrictRepository
 {
-    public DistrictRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<List<District>> GetAllWithRegionAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Set<District>()

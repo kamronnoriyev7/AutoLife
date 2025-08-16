@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions2
 {
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
     {
-        var key = Encoding.UTF8.GetBytes("superSecretKey12345");
+        var key = Encoding.UTF8.GetBytes("AutoLife yagona raqamli platforma !12345");
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

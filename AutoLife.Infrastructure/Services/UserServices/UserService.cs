@@ -16,10 +16,10 @@ namespace AutoLife.Infrastructure.Services.UserServices;
 public class UserService : IUserService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<User> _userRepository;
+    private readonly IGenericRepository<User, AppDbContext> _userRepository;
     private readonly IWebHostEnvironment _env;
 
-    public UserService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<User> userRepository, IWebHostEnvironment env)
+    public UserService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<User, AppDbContext> userRepository, IWebHostEnvironment env)
     {
         _unitOfWork = unitOfWork;
         _userRepository = userRepository;

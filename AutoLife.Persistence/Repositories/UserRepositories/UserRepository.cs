@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.UserRepositories;
 
-public class UserRepository : GenericRepository<User>, IUserRepository
+public class UserRepository(AppDbContext context) : GenericRepository<User, AppDbContext>(context), IUserRepository
 {
-    public UserRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _dbSet.FirstOrDefaultAsync(u => u.Email == email && !u.IsDeleted);

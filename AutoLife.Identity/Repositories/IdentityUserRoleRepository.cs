@@ -9,12 +9,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Repositories;
 
-public class IdentityUserRoleRepository : GenericRepository<UserRole>, IIdentityUserRoleRepository
+public class IdentityUserRoleRepository(IdentityDbContext context) : GenericRepository<UserRole, IdentityDbContext>(context), IIdentityUserRoleRepository
 {
-    public IdentityUserRoleRepository(IdentityDbContext context) : base(context)
-    {
-    }
-
     public async Task<IQueryable<UserRole>> GetAllRolesByUserId(Guid userId)
     {
       var query = _dbSet.AsQueryable()

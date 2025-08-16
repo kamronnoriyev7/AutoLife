@@ -13,23 +13,25 @@ public class DistrictConfiguration : IEntityTypeConfiguration<District>
 {
     public void Configure(EntityTypeBuilder<District> builder)
     {
-        builder.HasKey(d => d.BasaEntityId); // BaseEntity'dan olingan PK
+        builder.ToTable("Districts");
+
+        builder.HasKey(d => d.BasaEntityId);
 
         builder.Property(d => d.UzName)
-               .IsRequired()
-               .HasMaxLength(128);
+            .HasMaxLength(150)
+            .IsRequired();
 
         builder.Property(d => d.RuName)
-               .IsRequired()
-               .HasMaxLength(128);
+            .HasMaxLength(150)
+            .IsRequired();
 
         builder.Property(d => d.EnName)
-               .IsRequired()
-               .HasMaxLength(128);
+            .HasMaxLength(150)
+            .IsRequired();
 
         builder.HasOne(d => d.Region)
-               .WithMany(r => r.Districts)
-               .HasForeignKey(d => d.RegionId)
-               .OnDelete(DeleteBehavior.Cascade);
+            .WithMany(r => r.Districts)
+            .HasForeignKey(d => d.RegionId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

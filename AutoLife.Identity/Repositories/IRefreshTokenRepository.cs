@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Repositories;
 
-public interface IRefreshTokenRepository : IGenericRepository<RefreshToken>
+public interface IRefreshTokenRepository : IGenericRepository<RefreshToken, IdentityDbContext>
 {
     Task<RefreshToken?> GetByTokenAsync(string token);
     Task<IEnumerable<RefreshToken>> GetByUserIdAsync(Guid identityUserId);

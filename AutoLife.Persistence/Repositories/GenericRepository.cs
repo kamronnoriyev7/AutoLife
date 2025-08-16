@@ -1,43 +1,50 @@
 ﻿using AutoLife.Domain.Entities;
-using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
-using DbContext = Microsoft.EntityFrameworkCore.DbContext;
 
 namespace AutoLife.Persistence.Repositories;
 
-public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity, TContext>
+    where TEntity : BaseEntity
+    where TContext : DbContext
 {
     private readonly ConcurrentDictionary<string, object> _repositories = new();
 
-    protected readonly DbContext _context;
-    protected readonly DbSet<T> _dbSet;
+    protected readonly TContext _context;
+    protected readonly DbSet<TEntity> _dbSet;
 
-    public GenericRepository(DbContext context)
+    public GenericRepository(TContext context)
     {
         _context = context;
-        _dbSet = context.Set<T>();
+        _dbSet = _context.Set<TEntity>();
     }
 
-    public virtual async  Task<T?> GetByIdAsync(Guid id, string includeProperties = "", bool includeDeleted = false, bool asNoTracking = false) => await _dbSet.FindAsync(id);
-    public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
-    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
-     => await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id, string includeProperties = "", bool includeDeleted = false, bool asNoTracking = false)
+        => await _dbSet.FindAsync(id);
 
-    public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
-    public async Task AddRangeAsync(IEnumerable<T> entities) => await _dbSet.AddRangeAsync(entities);
-    public void Update(T entity) => _dbSet.Update(entity);
-    public void Remove(T entity) => _dbSet.Remove(entity);
-    public void RemoveRange(IEnumerable<T> entities) => _dbSet.RemoveRange(entities);
+    public async Task<IEnumerable<TEntity>> GetAllAsync() => await _dbSet.ToListAsync();
 
-    public async Task<IEnumerable<T>> GetPagedListAsync(
+    public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        => await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
+
+    public async Task AddAsync(TEntity entity) => await _dbSet.AddAsync(entity);
+
+    public async Task AddRangeAsync(IEnumerable<TEntity> entities) => await _dbSet.AddRangeAsync(entities);
+
+    public void Update(TEntity entity) => _dbSet.Update(entity);
+
+    public void Remove(TEntity entity) => _dbSet.Remove(entity);
+
+    public void RemoveRange(IEnumerable<TEntity> entities) => _dbSet.RemoveRange(entities);
+
+    public async Task<IEnumerable<TEntity>> GetPagedListAsync(
          int pageNumber, int pageSize,
-         Expression<Func<T, bool>>? predicate = null,
+         Expression<Func<TEntity, bool>>? predicate = null,
          string includeProperties = "",
          bool asNoTracking = true)
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<TEntity> query = _dbSet;
 
         if (predicate is not null)
             query = query.Where(predicate);
@@ -59,16 +66,16 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
             .ToListAsync();
     }
 
-    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null)
     {
         if (predicate == null)
             return await _dbSet.CountAsync();
         return await _dbSet.CountAsync(predicate);
     }
 
-    public async Task<bool> IsUniqueAsync(T entity, params Expression<Func<T, object>>[] uniqueProperties)
+    public async Task<bool> IsUniqueAsync(TEntity entity, params Expression<Func<TEntity, object>>[] uniqueProperties)
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<TEntity> query = _dbSet;
 
         foreach (var propExpr in uniqueProperties)
         {
@@ -80,14 +87,13 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
         if (entity.BasaEntityId != Guid.Empty)
         {
-            // agar yangilanyapti deb hisoblasak, o'zini tekshirishdan chiqaramiz
             query = query.Where(e => e.BasaEntityId != entity.BasaEntityId);
         }
 
         return !await query.AnyAsync();
     }
 
-    private string GetPropertyName(Expression<Func<T, object>> expression)
+    private string GetPropertyName(Expression<Func<TEntity, object>> expression)
     {
         if (expression.Body is MemberExpression member)
             return member.Member.Name;
@@ -98,8 +104,7 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         throw new InvalidOperationException("Invalid property expression");
     }
 
-
-    public void UpdateRange(IEnumerable<T> entities)
+    public void UpdateRange(IEnumerable<TEntity> entities)
     {
         _dbSet.UpdateRange(entities);
     }
@@ -129,9 +134,8 @@ public  class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await _context.Set<T>().FromSqlRaw(sql, parameters).ToListAsync();
     }
 
-    public IQueryable<T> GetQueryable()
+    public IQueryable<TEntity> GetQueryable()
     {
         return _dbSet.AsQueryable();
     }
 }
-

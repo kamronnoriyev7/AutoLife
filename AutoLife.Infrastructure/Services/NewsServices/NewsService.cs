@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.NewsServices;
 public class NewsService : INewsService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<News> _newsRepository;
+    private readonly IGenericRepository<News, AppDbContext> _newsRepository;
 
-    public NewsService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<News> newsRepository)
+    public NewsService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<News, AppDbContext> newsRepository)
     {
         _unitOfWork = unitOfWork;
         _newsRepository = newsRepository;

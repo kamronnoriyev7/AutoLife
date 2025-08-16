@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Repositories;
-public interface IIdentityUserRepository : IGenericRepository<IdentityUser>
+public interface IIdentityUserRepository : IGenericRepository<IdentityUser, IdentityDbContext> 
 {
     Task<IdentityUser?> GetByUserNameAsync(string userName);
     Task<IdentityUser?> GetByEmailAsync(string email);

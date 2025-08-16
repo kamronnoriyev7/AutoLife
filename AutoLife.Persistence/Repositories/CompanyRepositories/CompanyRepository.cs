@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.CompanyRepositories;
 
-public class CompanyRepository : GenericRepository<Company>, ICompanyRepository
+public class CompanyRepository : GenericRepository<Company, AppDbContext>, ICompanyRepository
 {
-    public CompanyRepository(DbContext context) : base(context)
+    public CompanyRepository(AppDbContext context) : base(context)
     {
     }
 

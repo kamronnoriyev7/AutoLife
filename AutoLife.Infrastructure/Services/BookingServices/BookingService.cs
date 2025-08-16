@@ -12,9 +12,9 @@ namespace AutoLife.Infrastructure.Services.BookingServices;
 internal class BookingService : IBookingService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Booking> _bookingRepository;
+    private readonly IGenericRepository<Booking, AppDbContext> _bookingRepository;
 
-    public BookingService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Booking> bookingRepository)
+    public BookingService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Booking, AppDbContext> bookingRepository)
     {
         _unitOfWork = unitOfWork;
         _bookingRepository = bookingRepository;
@@ -86,10 +86,16 @@ internal class BookingService : IBookingService
 
     }
 
-    public async Task<IEnumerable<BookingResponseDto>?> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<BookingResponseDto>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        return null;
-            
+        if (userId == Guid.Empty)
+            throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+        var bookings = await _bookingRepository.FindAsync(b => b.UserId == userId && !b.IsDeleted);
+        if (bookings == null || !bookings.Any())
+            return Enumerable.Empty<BookingResponseDto>();
+        var bookingDtos = bookings.Select(b => MapToResponseDto(b)).ToList();
+        return bookingDtos;
+
     }
 
     public async Task<IEnumerable<BookingResponseDto>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default)
