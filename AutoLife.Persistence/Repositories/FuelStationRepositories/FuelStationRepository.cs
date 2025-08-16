@@ -1,4 +1,5 @@
-﻿using AutoLife.Domain.Entities;
+﻿using AutoLife.Application.Helpers;
+using AutoLife.Domain.Entities;
 using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,10 +31,36 @@ public class FuelStationRepository : GenericRepository<FuelStation, AppDbContext
             .ToListAsync(cancellationToken);
     }
 
-    public Task<IQueryable<FuelStation>> GetFuelStationsByLocationAsync(Guid? countryId = null, Guid? regionId = null, Guid? districtId = null, string? street = null, CancellationToken cancellationToken = default)
+    public async Task<IQueryable<FuelStation>> GetFuelStationsByLocationAsync(
+       Guid? countryId = null,
+       Guid? regionId = null,
+       Guid? districtId = null,
+       string? street = null,
+       double? latitude = null,
+       double? longitude = null,
+       double? radiusKm = null,
+       CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var query = _context.FuelStations.AsQueryable();
+
+        if (latitude.HasValue && longitude.HasValue && radiusKm.HasValue)
+        {
+            query = query
+                .AsEnumerable()
+                .Where(f =>
+                    f.Address != null &&
+                    f.Address.GeoLocation != null &&
+                    GeoDistanceHelper.CalculateDistance(
+                        latitude.Value, longitude.Value,
+                        f.Address.GeoLocation.Latitude,
+                        f.Address.GeoLocation.Longitude) <= radiusKm.Value)
+                .AsQueryable();
+        }
+
+        return await Task.FromResult(query);
     }
+
+
 
     public async Task<FuelStation?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
     {
