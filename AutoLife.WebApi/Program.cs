@@ -15,6 +15,8 @@ namespace AutoLife.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.WebHost.UseUrls("http://0.0.0.0:5010");
+
             // 🔌 ConnectionString, Service/Repository
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddIdentityServices(builder.Configuration);
