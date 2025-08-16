@@ -20,7 +20,7 @@ public class AddFileParamTypesOperationFilter : IOperationFilter
                         Schema = new OpenApiSchema
                         {
                             Type = "object",
-                            Properties = fileParams.ToDictionary(p => p.Name, p => new OpenApiSchema
+                            Properties = fileParams.ToDictionary(p => p.Name!, p => new OpenApiSchema
                             {
                                 Type = "string",
                                 Format = "binary"

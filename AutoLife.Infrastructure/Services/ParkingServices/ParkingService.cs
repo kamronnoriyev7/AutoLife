@@ -15,9 +15,9 @@ namespace AutoLife.Infrastructure.Services.ParkingServices;
 public class ParkingService : IParkingService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Parking> _parkingRepository;
+    private readonly IGenericRepository<Parking, AppDbContext> _parkingRepository;
 
-    public ParkingService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Parking> parkingRepository)
+    public ParkingService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Parking, AppDbContext> parkingRepository)
     {
         _unitOfWork = unitOfWork;
         _parkingRepository = parkingRepository;

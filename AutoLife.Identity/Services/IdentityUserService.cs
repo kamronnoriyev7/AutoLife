@@ -171,9 +171,11 @@ public class IdentityUserService : IIdentityUserService
         if (string.IsNullOrWhiteSpace(userName))
             throw new ArgumentException("UserName cannot be null or empty", nameof(userName));
 
+        userName = userName.Trim();
+
         var user = await _identityUserRepository.GetByUserNameAsync(userName);
         return user != null;
-    }
+    } 
 
     public async Task Remove(Guid id)
     {

@@ -12,9 +12,9 @@ namespace AutoLife.Infrastructure.Services.AppFeedbackServices;
 public class AppFeedbackService : IAppFeedbackService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<AppFeedback> _appFeedbackRepository;
+    private readonly IGenericRepository<AppFeedback, AppDbContext> _appFeedbackRepository;
 
-    public AppFeedbackService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<AppFeedback> appFeedbackRepository)
+    public AppFeedbackService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<AppFeedback, AppDbContext> appFeedbackRepository)
     {
         _unitOfWork = unitOfWork;
         _appFeedbackRepository = appFeedbackRepository;

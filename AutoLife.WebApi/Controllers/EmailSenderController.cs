@@ -36,7 +36,7 @@ public class EmailSenderController : ControllerBase
         var fileBytes = ms.ToArray();
         var fileName = response.Attachment.FileName;
 
-        await _emailSenderService.SendAsync(response.To, response.Subject,response.Body, fileBytes, fileName);
+        await _emailSenderService.SendAsync(response.To!, response.Subject!, response.Body!, fileBytes, fileName);
         return Ok("Email fayl bilan yuborildi.");
     }
 }

@@ -13,10 +13,10 @@ namespace AutoLife.Infrastructure.Services.FavoriteServices;
 
 public class FavoriteService : IFavoriteService
 {
-    private readonly IGenericRepository<Favorite>  _favoriteRepository;
+    private readonly IGenericRepository<Favorite, AppDbContext>  _favoriteRepository;
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
 
-    public FavoriteService(IGenericRepository<Favorite> favoriteRepository, IUnitOfWork<AppDbContext> unitOfWork)
+    public FavoriteService(IGenericRepository<Favorite, AppDbContext> favoriteRepository, IUnitOfWork<AppDbContext> unitOfWork)
     {
         _favoriteRepository = favoriteRepository;
         _unitOfWork = unitOfWork;

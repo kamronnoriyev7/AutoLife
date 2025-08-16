@@ -1,38 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq.Expressions;
 using AutoLife.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
-
-namespace AutoLife.Persistence.Repositories;
-
-
-public interface IGenericRepository<T> where T : BaseEntity
+namespace AutoLife.Persistence.Repositories
 {
-    Task<IEnumerable<T>> GetPagedListAsync(
+    public interface IGenericRepository<TEntity, TContext>
+        where TEntity : BaseEntity
+        where TContext : DbContext
+    {
+        Task<IEnumerable<TEntity>> GetPagedListAsync(
             int pageNumber, int pageSize,
-            Expression<Func<T, bool>>? predicate = null,
+            Expression<Func<TEntity, bool>>? predicate = null,
             string includeProperties = "",
             bool asNoTracking = true);
 
-    Task<T?> GetByIdAsync(Guid id, string includeProperties = "", bool includeDeleted = false, bool asNoTracking = false);
-    Task<IEnumerable<T>> GetAllAsync();
-    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-    Task AddAsync(T entity);
-    Task AddRangeAsync(IEnumerable<T> entities);
-    void Update(T entity);
-    void Remove(T entity);
-    void RemoveRange(IEnumerable<T> entities);
-    Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null);
-    Task<bool> IsUniqueAsync(T entity, params Expression<Func<T, object>>[] uniqueProperties);
-    void UpdateRange(IEnumerable<T> entities);
-    Task SoftDeleteAsync(Guid id);
-    Task RestoreDeletedAsync(Guid id);
-    Task<List<T>> FromSqlRawAsync<T>(string sql, params object[] parameters) where T : class;
-    IQueryable<T> GetQueryable();
-
+        Task<TEntity?> GetByIdAsync(Guid id, string includeProperties = "", bool includeDeleted = false, bool asNoTracking = false);
+        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
+        Task AddAsync(TEntity entity);
+        Task AddRangeAsync(IEnumerable<TEntity> entities);
+        void Update(TEntity entity);
+        void Remove(TEntity entity);
+        void RemoveRange(IEnumerable<TEntity> entities);
+        Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null);
+        Task<bool> IsUniqueAsync(TEntity entity, params Expression<Func<TEntity, object>>[] uniqueProperties);
+        void UpdateRange(IEnumerable<TEntity> entities);
+        Task SoftDeleteAsync(Guid id);
+        Task RestoreDeletedAsync(Guid id);
+        Task<List<TResult>> FromSqlRawAsync<TResult>(string sql, params object[] parameters) where TResult : class;
+        IQueryable<TEntity> GetQueryable();
+    }
 }
-

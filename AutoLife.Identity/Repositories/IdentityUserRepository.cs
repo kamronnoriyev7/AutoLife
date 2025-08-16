@@ -10,10 +10,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Repositories;
 
-public class IdentityUserRepository : GenericRepository<IdentityUser>, IIdentityUserRepository
+public class IdentityUserRepository(IdentityDbContext context) : GenericRepository<IdentityUser, IdentityDbContext>(context), IIdentityUserRepository
 {
-    public IdentityUserRepository(IdentityDbContext context) : base(context) { }
-
     public async Task<IdentityUser?> GetByUserNameAsync(string userName)
         => await _dbSet.FirstOrDefaultAsync(u => u.UserName == userName);
 

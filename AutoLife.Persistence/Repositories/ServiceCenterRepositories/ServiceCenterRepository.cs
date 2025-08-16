@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.ServiceCenterRepositories;
 
-public class ServiceCenterRepository : GenericRepository<ServiceCenter>, IServiceCenterRepository
+public class ServiceCenterRepository(AppDbContext context) : GenericRepository<ServiceCenter,AppDbContext>(context), IServiceCenterRepository
 {
-    public ServiceCenterRepository(DbContext context) : base(context)
-    {
-    }
     public async Task<List<ServiceCenter>> GetAllWithDistrictAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Set<ServiceCenter>()

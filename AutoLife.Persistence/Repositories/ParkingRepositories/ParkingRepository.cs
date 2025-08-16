@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.ParkingRepositories;
 
-public class ParkingRepository : GenericRepository<Parking>, IParkingRepository
+public class ParkingRepository(AppDbContext context) : GenericRepository<Parking, AppDbContext>(context), IParkingRepository
 {
-    public ParkingRepository(DbContext context) : base(context)
-    {
-    }
-
     public async Task<IEnumerable<Parking>> GetAvailableParkingsAsync(DateTime startTime, DateTime endTime)
     {
         return await _context.Set<Parking>()

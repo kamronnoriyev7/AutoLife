@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AutoLife.Persistence.Migrations
+namespace AutoLife.Persistence.Migrations.App
 {
     /// <inheritdoc />
-    public partial class init1 : Migration
+    public partial class InitApp : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,9 +16,9 @@ namespace AutoLife.Persistence.Migrations
                 columns: table => new
                 {
                     BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UzName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    RuName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    EnName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    UzName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    RuName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    EnName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
@@ -27,24 +27,6 @@ namespace AutoLife.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Countries", x => x.BasaEntityId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FuelType",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FuelType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,9 +58,9 @@ namespace AutoLife.Persistence.Migrations
                 columns: table => new
                 {
                     BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UzName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    RuName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    EnName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    UzName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    RuName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    EnName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     CountryId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -92,32 +74,7 @@ namespace AutoLife.Persistence.Migrations
                         name: "FK_Regions_Countries_CountryId",
                         column: x => x.CountryId,
                         principalTable: "Countries",
-                        principalColumn: "BasaEntityId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FuelSubType",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    FuelTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FuelSubType", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FuelSubType_FuelType_FuelTypeId",
-                        column: x => x.FuelTypeId,
-                        principalTable: "FuelType",
-                        principalColumn: "Id");
+                        principalColumn: "BasaEntityId");
                 });
 
             migrationBuilder.CreateTable(
@@ -176,13 +133,40 @@ namespace AutoLife.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PaymentTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Provider = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    TransactionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PaymentTransactions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Districts",
                 columns: table => new
                 {
                     BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UzName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    RuName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    EnName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    UzName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    RuName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    EnName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     RegionId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -196,7 +180,281 @@ namespace AutoLife.Persistence.Migrations
                         name: "FK_Districts_Regions_RegionId",
                         column: x => x.RegionId,
                         principalTable: "Regions",
+                        principalColumn: "BasaEntityId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Orientation = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    Street = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    HouseNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CountryId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RegionId = table.Column<Guid>(type: "uuid", nullable: true),
+                    DistrictId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.BasaEntityId);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "BasaEntityId");
+                    table.ForeignKey(
+                        name: "FK_Addresses_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "BasaEntityId");
+                    table.ForeignKey(
+                        name: "FK_Addresses_Districts_DistrictId",
+                        column: x => x.DistrictId,
+                        principalTable: "Districts",
+                        principalColumn: "BasaEntityId");
+                    table.ForeignKey(
+                        name: "FK_Addresses_Regions_RegionId",
+                        column: x => x.RegionId,
+                        principalTable: "Regions",
+                        principalColumn: "BasaEntityId");
+                    table.ForeignKey(
+                        name: "FK_Addresses_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FuelStations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    AddressId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OperatorName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FuelStations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FuelStations_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
                         principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FuelStations_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_FuelStations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GeoLocations",
+                columns: table => new
+                {
+                    AddressBasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GeoLocations", x => x.AddressBasaEntityId);
+                    table.ForeignKey(
+                        name: "FK_GeoLocations_Addresses_AddressBasaEntityId",
+                        column: x => x.AddressBasaEntityId,
+                        principalTable: "Addresses",
+                        principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Parkings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    AddressId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    HourlyRate = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    DailyRate = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    IsFree = table.Column<bool>(type: "boolean", nullable: false),
+                    HasCameras = table.Column<bool>(type: "boolean", nullable: false),
+                    IsCovered = table.Column<bool>(type: "boolean", nullable: false),
+                    TotalSpaces = table.Column<int>(type: "integer", nullable: false),
+                    AvailableSpaces = table.Column<int>(type: "integer", nullable: false),
+                    OpeningTime = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    ClosingTime = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    IsPreBookingAllowed = table.Column<bool>(type: "boolean", nullable: true),
+                    AverageRating = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
+                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Parkings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Parkings_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Parkings_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Parkings_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServiceCenters",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ServiceType = table.Column<int>(type: "integer", nullable: false),
+                    AddressId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceCenters", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServiceCenters_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_ServiceCenters_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_ServiceCenters_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FuelType",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    FuelStationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FuelType", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FuelType_FuelStations_FuelStationId",
+                        column: x => x.FuelStationId,
+                        principalTable: "FuelStations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParkingPrices",
+                columns: table => new
+                {
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ParkingId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FromTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    ToTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    PricePerHour = table.Column<decimal>(type: "numeric", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParkingPrices", x => x.BasaEntityId);
+                    table.ForeignKey(
+                        name: "FK_ParkingPrices_Parkings_ParkingId",
+                        column: x => x.ParkingId,
+                        principalTable: "Parkings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FuelSubType",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    FuelTypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FuelSubType", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FuelSubType_FuelType_FuelTypeId",
+                        column: x => x.FuelTypeId,
+                        principalTable: "FuelType",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -240,235 +498,12 @@ namespace AutoLife.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Addresses",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Orientation = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
-                    Street = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    HouseNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CountryId = table.Column<Guid>(type: "uuid", nullable: true),
-                    RegionId = table.Column<Guid>(type: "uuid", nullable: true),
-                    DistrictId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Addresses_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "BasaEntityId");
-                    table.ForeignKey(
-                        name: "FK_Addresses_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "BasaEntityId");
-                    table.ForeignKey(
-                        name: "FK_Addresses_Districts_DistrictId",
-                        column: x => x.DistrictId,
-                        principalTable: "Districts",
-                        principalColumn: "BasaEntityId");
-                    table.ForeignKey(
-                        name: "FK_Addresses_Regions_RegionId",
-                        column: x => x.RegionId,
-                        principalTable: "Regions",
-                        principalColumn: "BasaEntityId");
-                    table.ForeignKey(
-                        name: "FK_Addresses_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FuelStations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    AddressId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OperatorName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    PhoneNumber = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    FuelTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FuelSubTypeId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CompanyBasaEntityId = table.Column<Guid>(type: "uuid", nullable: true),
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FuelStations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FuelStations_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_FuelStations_Companies_CompanyBasaEntityId",
-                        column: x => x.CompanyBasaEntityId,
-                        principalTable: "Companies",
-                        principalColumn: "BasaEntityId");
-                    table.ForeignKey(
-                        name: "FK_FuelStations_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "BasaEntityId");
-                    table.ForeignKey(
-                        name: "FK_FuelStations_FuelSubType_FuelSubTypeId",
-                        column: x => x.FuelSubTypeId,
-                        principalTable: "FuelSubType",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_FuelStations_FuelType_FuelTypeId",
-                        column: x => x.FuelTypeId,
-                        principalTable: "FuelType",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_FuelStations_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GeoLocations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Latitude = table.Column<double>(type: "double precision", nullable: false),
-                    Longitude = table.Column<double>(type: "double precision", nullable: false),
-                    Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    AddressId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GeoLocations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GeoLocations_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Parkings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    AddressId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    HourlyRate = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    DailyRate = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    IsFree = table.Column<bool>(type: "boolean", nullable: false),
-                    HasCameras = table.Column<bool>(type: "boolean", nullable: false),
-                    IsCovered = table.Column<bool>(type: "boolean", nullable: false),
-                    TotalSpaces = table.Column<int>(type: "integer", nullable: false),
-                    AvailableSpaces = table.Column<int>(type: "integer", nullable: false),
-                    OpeningTime = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    ClosingTime = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    IsPreBookingAllowed = table.Column<bool>(type: "boolean", nullable: true),
-                    AverageRating = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
-                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Parkings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Parkings_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Parkings_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "BasaEntityId",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Parkings_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServiceCenters",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ServiceType = table.Column<int>(type: "integer", nullable: false),
-                    AddressId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CompanyId = table.Column<Guid>(type: "uuid", nullable: true),
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceCenters", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ServiceCenters_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_ServiceCenters_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "BasaEntityId",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_ServiceCenters_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "FuelPrices",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FuelStationId = table.Column<Guid>(type: "uuid", nullable: false),
                     FuelSubTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -480,42 +515,9 @@ namespace AutoLife.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_FuelPrices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FuelPrices_FuelStations_FuelStationId",
-                        column: x => x.FuelStationId,
-                        principalTable: "FuelStations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_FuelPrices_FuelSubType_FuelSubTypeId",
                         column: x => x.FuelSubTypeId,
                         principalTable: "FuelSubType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ParkingPrices",
-                columns: table => new
-                {
-                    BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ParkingId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FromTime = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    ToTime = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    PricePerHour = table.Column<decimal>(type: "numeric", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ParkingPrices", x => x.BasaEntityId);
-                    table.ForeignKey(
-                        name: "FK_ParkingPrices_Parkings_ParkingId",
-                        column: x => x.ParkingId,
-                        principalTable: "Parkings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -526,17 +528,17 @@ namespace AutoLife.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ParkingId = table.Column<Guid>(type: "uuid", nullable: true),
-                    FuelStationId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ServiceCenterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    BookingType = table.Column<int>(type: "integer", nullable: false),
+                    TargetId = table.Column<Guid>(type: "uuid", nullable: false),
                     VehicleId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     AddressId = table.Column<Guid>(type: "uuid", nullable: true),
                     From = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     To = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SpotCount = table.Column<int>(type: "integer", nullable: false),
+                    SpotCount = table.Column<int>(type: "integer", nullable: true),
                     TotalPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: true),
+                    ParkingId = table.Column<Guid>(type: "uuid", nullable: true),
                     BasaEntityId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -550,24 +552,13 @@ namespace AutoLife.Persistence.Migrations
                         name: "FK_Bookings_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bookings_FuelStations_FuelStationId",
-                        column: x => x.FuelStationId,
-                        principalTable: "FuelStations",
-                        principalColumn: "Id");
+                        principalColumn: "BasaEntityId",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Bookings_Parkings_ParkingId",
                         column: x => x.ParkingId,
                         principalTable: "Parkings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_ServiceCenters_ServiceCenterId",
-                        column: x => x.ServiceCenterId,
-                        principalTable: "ServiceCenters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bookings_Users_UserId",
                         column: x => x.UserId,
@@ -578,7 +569,8 @@ namespace AutoLife.Persistence.Migrations
                         name: "FK_Bookings_Vehicles_VehicleId",
                         column: x => x.VehicleId,
                         principalTable: "Vehicles",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -605,7 +597,8 @@ namespace AutoLife.Persistence.Migrations
                         name: "FK_Favorites_FuelStations_FuelStationId",
                         column: x => x.FuelStationId,
                         principalTable: "FuelStations",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Favorites_Parkings_ParkingId",
                         column: x => x.ParkingId,
@@ -888,7 +881,8 @@ namespace AutoLife.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CompanyId",
                 table: "Addresses",
-                column: "CompanyId");
+                column: "CompanyId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CountryId",
@@ -921,19 +915,9 @@ namespace AutoLife.Persistence.Migrations
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_FuelStationId",
-                table: "Bookings",
-                column: "FuelStationId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_ParkingId",
                 table: "Bookings",
                 column: "ParkingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_ServiceCenterId",
-                table: "Bookings",
-                column: "ServiceCenterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_UserId",
@@ -981,11 +965,6 @@ namespace AutoLife.Persistence.Migrations
                 column: "VehicleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FuelPrices_FuelStationId",
-                table: "FuelPrices",
-                column: "FuelStationId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FuelPrices_FuelSubTypeId",
                 table: "FuelPrices",
                 column: "FuelSubTypeId");
@@ -996,24 +975,9 @@ namespace AutoLife.Persistence.Migrations
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FuelStations_CompanyBasaEntityId",
-                table: "FuelStations",
-                column: "CompanyBasaEntityId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FuelStations_CompanyId",
                 table: "FuelStations",
                 column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FuelStations_FuelSubTypeId",
-                table: "FuelStations",
-                column: "FuelSubTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FuelStations_FuelTypeId",
-                table: "FuelStations",
-                column: "FuelTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FuelStations_UserId",
@@ -1026,10 +990,9 @@ namespace AutoLife.Persistence.Migrations
                 column: "FuelTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GeoLocations_AddressId",
-                table: "GeoLocations",
-                column: "AddressId",
-                unique: true);
+                name: "IX_FuelType_FuelStationId",
+                table: "FuelType",
+                column: "FuelStationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_CompanyId",
@@ -1152,6 +1115,17 @@ namespace AutoLife.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PaymentTransactions_TransactionId",
+                table: "PaymentTransactions",
+                column: "TransactionId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentTransactions_UserId",
+                table: "PaymentTransactions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Ratings_BookingId",
                 table: "Ratings",
                 column: "BookingId");
@@ -1247,7 +1221,13 @@ namespace AutoLife.Persistence.Migrations
                 name: "ParkingPrices");
 
             migrationBuilder.DropTable(
+                name: "PaymentTransactions");
+
+            migrationBuilder.DropTable(
                 name: "Ratings");
+
+            migrationBuilder.DropTable(
+                name: "FuelSubType");
 
             migrationBuilder.DropTable(
                 name: "News");
@@ -1256,25 +1236,22 @@ namespace AutoLife.Persistence.Migrations
                 name: "Bookings");
 
             migrationBuilder.DropTable(
-                name: "FuelStations");
+                name: "ServiceCenters");
 
             migrationBuilder.DropTable(
                 name: "Parkings");
 
             migrationBuilder.DropTable(
-                name: "ServiceCenters");
-
-            migrationBuilder.DropTable(
                 name: "Vehicles");
 
             migrationBuilder.DropTable(
-                name: "FuelSubType");
+                name: "FuelType");
+
+            migrationBuilder.DropTable(
+                name: "FuelStations");
 
             migrationBuilder.DropTable(
                 name: "Addresses");
-
-            migrationBuilder.DropTable(
-                name: "FuelType");
 
             migrationBuilder.DropTable(
                 name: "Companies");

@@ -8,5 +8,5 @@ public class Country : BaseEntity
     public string RuName { get; set; } = string.Empty;
     public string EnName { get; set; } = string.Empty;
 
-    public IEnumerable<Region>? Regions { get; set; }
+    public ICollection<Region> Regions { get; set; } = new List<Region>();
 }

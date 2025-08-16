@@ -1,5 +1,6 @@
 ﻿using AutoLife.Domain.Entities;
 using AutoLife.Domain.Enums;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.BookingRepositories;
 
-public class BookingRepository : GenericRepository<Booking>, IBookingRepository
+public class BookingRepository : GenericRepository<Booking, AppDbContext>, IBookingRepository
 {
 
-    public BookingRepository(DbContext context) : base(context)
+    public BookingRepository(AppDbContext context) : base(context)
     {
     }
 
@@ -35,11 +36,9 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
         return await _context.Set<Booking>()
             .Include(b => b.User)
             .Include(b => b.Vehicle)
-            .Include(b => b.FuelStation)
-            .Include(b => b.ServiceCenter)
-            .Include(b => b.Parking)
             .Include(b => b.Address)
             .Include(b => b.Ratings)
+            .Include(b => b.Status)
             .Include(b => b.Notifications)
             .ToListAsync(cancellationToken);
     }
@@ -49,9 +48,7 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
         return await _context.Set<Booking>()
             .Include(b => b.User)
             .Include(b => b.Vehicle)
-            .Include(b => b.FuelStation)
-            .Include(b => b.ServiceCenter)
-            .Include(b => b.Parking)
+            .Include(b => b.Status)
             .Include(b => b.Address)
             .Include(b => b.Ratings)
             .Include(b => b.Notifications)

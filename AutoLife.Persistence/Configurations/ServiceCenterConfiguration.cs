@@ -80,10 +80,8 @@ public class ServiceCenterConfiguration : IEntityTypeConfiguration<ServiceCenter
             .HasForeignKey(n => n.ServiceCenterId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Bookings
-        builder.HasMany(sc => sc.Bookings)
-            .WithOne(b => b.ServiceCenter)
-            .HasForeignKey(b => b.ServiceCenterId)
-            .OnDelete(DeleteBehavior.Cascade);
+        // ServiceCenter ichida Booking mappingni umuman qo‘ymaymiz
+        builder.Ignore(sc => sc.Bookings);
+
     }
 }

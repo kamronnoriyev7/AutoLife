@@ -19,16 +19,12 @@ public class FuelStation : BaseEntity
     public Guid? UserId { get; set; } 
     public User? User { get; set; } = null;
 
-    public Guid FuelTypeId { get; set; } 
-    public FuelType? FuelType { get; set; } 
-    public Guid? FuelSubTypeId { get; set; } 
-    public FuelSubType? FuelSubType { get; set; } 
+    public ICollection<FuelType> FuelTypes { get; set; } = new List<FuelType>();
 
     public Guid? CompanyId { get; set; }                                          
     public Company? Company { get; set; } = null; 
 
     public ICollection<Image>? Images { get; set; } = new List<Image>();
-    public ICollection<FuelPrice>? FuelPrices { get; set; } = new List<FuelPrice>();
     public ICollection<Rating>? Ratings { get; set; } = new List<Rating>();
     public ICollection<Favorite>? Favorites { get; set; } = new List<Favorite>();
     public ICollection<Notification>? Notifications { get; set; } = new List<Notification>(); 

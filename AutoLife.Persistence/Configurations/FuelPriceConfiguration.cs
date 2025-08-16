@@ -8,27 +8,23 @@ public class FuelPriceConfiguration : IEntityTypeConfiguration<FuelPrice>
 {
     public void Configure(EntityTypeBuilder<FuelPrice> builder)
     {
+        // Primary Key
         builder.HasKey(fp => fp.Id);
 
+        // Price property
         builder.Property(fp => fp.Price)
-            .HasColumnType("decimal(10,2)")
-            .IsRequired();
+               .IsRequired()
+               .HasColumnType("decimal(18,2)");
 
+        // Date property
         builder.Property(fp => fp.Date)
-            .IsRequired();
+               .IsRequired()
+               .HasColumnType("date"); // SQL date turiga mos
 
-
-
-        builder.HasOne(fp => fp.FuelStation)
-    .WithMany(fs => fs.FuelPrices)
-    .HasForeignKey(fp => fp.FuelStationId)
-    .OnDelete(DeleteBehavior.Restrict); // BU JOY TO‘G‘RI
-
+        // Relationship: FuelPrice -> FuelSubType (many-to-one)
         builder.HasOne(fp => fp.FuelSubType)
-            .WithMany(fst => fst.FuelPrices)
-            .HasForeignKey(fp => fp.FuelSubTypeId)
-            .OnDelete(DeleteBehavior.Restrict); // BUNISI HAM RESTRICT BO‘LSIN
-
+               .WithMany() // FuelSubType da FuelPrices kolleksiyasi bo'lmasa shunday yoziladi
+               .HasForeignKey(fp => fp.FuelSubTypeId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
-
 }

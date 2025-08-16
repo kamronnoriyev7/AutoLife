@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.VehicleServices;
 public class VehicleService : IVehicleService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Vehicle> _vehicleRepository;
+    private readonly IGenericRepository<Vehicle, AppDbContext> _vehicleRepository;
 
-    public VehicleService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Vehicle> vehicleRepository)
+    public VehicleService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Vehicle, AppDbContext> vehicleRepository)
     {
         _unitOfWork = unitOfWork;
         _vehicleRepository = vehicleRepository;

@@ -1,4 +1,5 @@
 ﻿using AutoLife.Domain.Entities;
+using AutoLife.Persistence.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.VehicleRepositories;
 
-public class VehicleRepository : GenericRepository<Vehicle>, IVehicleRepository
+public class VehicleRepository : GenericRepository<Vehicle, AppDbContext>, IVehicleRepository
 {
-    public VehicleRepository(DbContext context) : base(context)
+    public VehicleRepository(AppDbContext context) : base(context)
     {
     }
 }

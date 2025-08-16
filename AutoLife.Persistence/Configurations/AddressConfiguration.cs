@@ -15,7 +15,7 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
     {
         builder.ToTable("Addresses");
 
-        builder.HasKey(a => a.Id);
+        builder.HasKey(a => a.BasaEntityId);
 
         builder.Property(a => a.Orientation)
             .HasMaxLength(250)
@@ -29,37 +29,37 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
             .HasMaxLength(50)
             .IsRequired(false);
 
-       
-        // User (1:N optional)
+        builder.OwnsOne(a => a.GeoLocation);
+
+        // User (optional)
         builder.HasOne(a => a.User)
             .WithMany(u => u.Addresses)
             .HasForeignKey(a => a.UserId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // Country (N:1 required)
+        // Country (optional)
         builder.HasOne(a => a.Country)
             .WithMany()
             .HasForeignKey(a => a.CountryId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // Region (N:1 optional)
+        // Region (optional)
         builder.HasOne(a => a.Region)
             .WithMany()
             .HasForeignKey(a => a.RegionId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // District (N:1 optional)
+        // District (optional)
         builder.HasOne(a => a.District)
             .WithMany()
             .HasForeignKey(a => a.DistrictId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // Company (N:1 optional)
+        // Company (optional)
         builder.HasOne(a => a.Company)
-           .WithOne(c => c.Address)
-           .HasForeignKey<Address>(a => a.CompanyId)
-           .OnDelete(DeleteBehavior.NoAction);
-
+            .WithOne(c => c.Address)
+            .HasForeignKey<Address>(a => a.CompanyId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Parkings
         builder.HasMany(a => a.Parkings)
@@ -67,13 +67,13 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
             .HasForeignKey(p => p.AddressId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // ServiceCenters
+        // Service Centers
         builder.HasMany(a => a.ServiceCenters)
             .WithOne(sc => sc.Address)
             .HasForeignKey(sc => sc.AddressId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // FuelStations
+        // Fuel Stations
         builder.HasMany(a => a.FuelStations)
             .WithOne(fs => fs.Address)
             .HasForeignKey(fs => fs.AddressId)

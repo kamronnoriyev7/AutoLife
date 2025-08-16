@@ -1,9 +1,10 @@
 ﻿using AutoLife.Domain.Entities;
 using AutoLife.Domain.Enums;
+using AutoLife.Persistence.DataBaseContext;
 
 namespace AutoLife.Persistence.Repositories.BookingRepositories;
 
-public interface IBookingRepository : IGenericRepository<Booking>
+public interface IBookingRepository : IGenericRepository<Booking, AppDbContext>
 {
     Task<IEnumerable<Booking>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
     Task<IEnumerable<Booking>> GetAllByStatusAsync(BookingStatus status, CancellationToken cancellationToken = default);

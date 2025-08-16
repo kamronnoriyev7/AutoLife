@@ -10,10 +10,8 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Identity.Repositories;
 
-public class VerificationCodeRepository : GenericRepository<VerificationCode>, IVerificationCodeRepository
+public class VerificationCodeRepository(IdentityDbContext context) : GenericRepository<VerificationCode, IdentityDbContext>(context), IVerificationCodeRepository
 {
-    public VerificationCodeRepository(IdentityDbContext context) : base(context) { }
-
     public async Task AddCodeAsync(VerificationCode verificationCode)
     {
         var existingCode = await ExistsAsync(verificationCode);
@@ -59,7 +57,8 @@ public class VerificationCodeRepository : GenericRepository<VerificationCode>, I
 
     public async Task<VerificationCode?> GetCodeAsync(string email)
     {
-        return await _dbSet.FirstOrDefaultAsync(VerificationCode => VerificationCode.Email == email);
+        return await _dbSet.FirstOrDefaultAsync(VerificationCode => VerificationCode.Email == email 
+                                                                     && VerificationCode.IsDeleted == false);
     }
 
     public async Task<bool> VerifyCodeAsync(string email, string code)

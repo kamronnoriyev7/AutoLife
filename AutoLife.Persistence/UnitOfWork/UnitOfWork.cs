@@ -1,33 +1,37 @@
 ﻿using AutoLife.Domain.Entities;
 using AutoLife.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace AutoLife.Persistence.UnitOfWork;
-
-public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContext
+namespace AutoLife.Persistence.UnitOfWork
 {
-    private readonly TContext _context;
-    private readonly Dictionary<Type, object> _repositories = new();
-
-    public UnitOfWork(TContext context)
+    public class UnitOfWork<TContext> : IUnitOfWork<TContext>
+        where TContext : DbContext
     {
-        _context = context;
-    }
+        private readonly TContext _context;
+        private readonly Dictionary<Type, object> _repositories = new();
 
-    public IGenericRepository<T> Repository<T>() where T : BaseEntity
-    {
-        var type = typeof(T);
-        if (!_repositories.ContainsKey(type))
+        public UnitOfWork(TContext context)
         {
-            var repoInstance = new GenericRepository<T>(_context);
-            _repositories[type] = repoInstance;
+            _context = context;
         }
 
-        return (IGenericRepository<T>)_repositories[type];
+        public IGenericRepository<TEntity, TContext> Repository<TEntity>() where TEntity : BaseEntity
+        {
+            var type = typeof(TEntity);
+            if (!_repositories.ContainsKey(type))
+            {
+                var repoInstance = new GenericRepository<TEntity, TContext>(_context);
+                _repositories[type] = repoInstance;
+            }
+
+            return (IGenericRepository<TEntity, TContext>)_repositories[type];
+        }
+
+        public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public void Dispose() => _context.Dispose();
     }
-
-    public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
-
-    public void Dispose() => _context.Dispose();
 }
-

@@ -13,17 +13,8 @@ public class Booking : BaseEntity            /// Booking ni umumiy barcha zakazl
     public Guid UserId { get; set; }
     public User User { get; set; } = default!;
 
-    public BookingType BookingType { get; set; } // Zakaz qaysi turda?
-    public Guid TargetId { get; set; } // Qaysi Parking / Service / FuelStation ga tegishli?
-
-    public Guid? ParkingId { get; set; }
-    public Parking? Parking { get; set; } = default!;
-
-    public Guid? FuelStationId { get; set; }
-    public FuelStation? FuelStation { get; set; } = default!;
-
-    public Guid? ServiceCenterId { get; set; } 
-    public ServiceCenter? ServiceCenter { get; set; } = default!;
+    public BookingType BookingType { get; set; } 
+    public Guid TargetId { get; set; } 
 
     public Guid? VehicleId { get; set; }
     public Vehicle? Vehicle { get; set; } = default!;

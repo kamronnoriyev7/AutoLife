@@ -13,23 +13,25 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
     public void Configure(EntityTypeBuilder<Country> builder)
     {
-        builder.HasKey(c => c.BasaEntityId); // BaseEntity'dan meros
+        builder.ToTable("Countries");
+
+        builder.HasKey(c => c.BasaEntityId);
 
         builder.Property(c => c.UzName)
-               .IsRequired()
-               .HasMaxLength(128);
+            .HasMaxLength(150)
+            .IsRequired();
 
         builder.Property(c => c.RuName)
-               .IsRequired()
-               .HasMaxLength(128);
+            .HasMaxLength(150)
+            .IsRequired();
 
         builder.Property(c => c.EnName)
-               .IsRequired()
-               .HasMaxLength(128);
+            .HasMaxLength(150)
+            .IsRequired();
 
         builder.HasMany(c => c.Regions)
-               .WithOne(r => r.Country)
-               .HasForeignKey(r => r.CountryId)
-               .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(r => r.Country)
+            .HasForeignKey(r => r.CountryId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

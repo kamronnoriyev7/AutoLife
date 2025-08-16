@@ -9,7 +9,7 @@ public class Region : BaseEntity
     public string EnName { get; set; } = string.Empty;
 
     public Guid CountryId { get; set; }
-    public Country? Country { get; set; }
+    public Country Country { get; set; } = default!;
 
-    public IEnumerable<District>? Districts { get; set; }
+    public ICollection<District> Districts { get; set; } = new List<District>();
 }

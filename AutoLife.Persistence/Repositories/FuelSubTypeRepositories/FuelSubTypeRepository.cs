@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AutoLife.Persistence.Repositories.FuelSubTypeRepositories;
 
-public class FuelSubTypeRepository : GenericRepository<FuelSubType>, IFuelSubTypeRepository
+public class FuelSubTypeRepository : GenericRepository<FuelSubType, AppDbContext>, IFuelSubTypeRepository
 {
     public FuelSubTypeRepository(AppDbContext context) : base(context)
     {

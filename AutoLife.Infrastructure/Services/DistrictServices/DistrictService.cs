@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.DistrictServices;
 public class DistrictService : IDistrictService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<District> _districtRepository;
+    private readonly IGenericRepository<District, AppDbContext> _districtRepository;
 
-    public DistrictService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<District> districtRepository)
+    public DistrictService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<District, AppDbContext> districtRepository)
     {
         _unitOfWork = unitOfWork;
         _districtRepository = districtRepository;

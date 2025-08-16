@@ -14,10 +14,10 @@ namespace AutoLife.Infrastructure.Services.FuelStationServices;
 public class FuelStationService : IFuelStationService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<FuelStation> _fuelStationRepository;
+    private readonly IGenericRepository<FuelStation, AppDbContext> _fuelStationRepository;
     private readonly IMappingService _mappingService;
 
-    public FuelStationService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelStation> fuelStationRepository, IMappingService mappingService)
+    public FuelStationService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<FuelStation, AppDbContext> fuelStationRepository, IMappingService mappingService)
     {
         _unitOfWork = unitOfWork;
         _fuelStationRepository = fuelStationRepository;
@@ -34,8 +34,6 @@ public class FuelStationService : IFuelStationService
             Name = fuelStationDto.Name,
             AddressId = fuelStationDto.AddressId,
             CompanyId = fuelStationDto.CompanyId,
-            FuelTypeId = fuelStationDto.FuelTypeId,
-            FuelSubTypeId = fuelStationDto.FuelSubTypeId,
             UserId = fuelStationDto.UserId,
             OperatorName = fuelStationDto.OperatorName,
             PhoneNumber = fuelStationDto.PhoneNumber,
@@ -71,8 +69,6 @@ public class FuelStationService : IFuelStationService
             Name = fs.Name,
             AddressId = fs.AddressId,
             CompanyId = fs.CompanyId,
-            FuelTypeId = fs.FuelTypeId,
-            FuelSubTypeId = fs.FuelSubTypeId,
             UserId = fs.UserId,
             OperatorName = fs.OperatorName,
             PhoneNumber = fs.PhoneNumber,
@@ -94,34 +90,13 @@ public class FuelStationService : IFuelStationService
             Name = fuelStation.Name,
             AddressId = fuelStation.AddressId,
             CompanyId = fuelStation.CompanyId,
-            FuelTypeId = fuelStation.FuelTypeId,
-            FuelSubTypeId = fuelStation.FuelSubTypeId,
             UserId = fuelStation.UserId,
             OperatorName = fuelStation.OperatorName,
             PhoneNumber = fuelStation.PhoneNumber,
         };
     }
 
-    public async Task<IEnumerable<FuelStationResponseDto>> GetFuelStationsByFuelTypeAsync(FuelType fuelType)
-    {
-        if (fuelType == null)
-            throw new ArgumentNullException(nameof(fuelType), "Fuel type cannot be null.");
-
-        var fuelStations = await _fuelStationRepository.FindAsync(fs => fs.FuelTypeId == fuelType.Id && !fs.IsDeleted);
-
-        return fuelStations.Select(fs => new FuelStationResponseDto
-        {
-            Id = fs.Id,
-            Name = fs.Name,
-            AddressId = fs.AddressId,
-            CompanyId = fs.CompanyId,
-            FuelTypeId = fs.FuelTypeId,
-            FuelSubTypeId = fs.FuelSubTypeId,
-            UserId = fs.UserId,
-            OperatorName = fs.OperatorName,
-            PhoneNumber = fs.PhoneNumber,
-        });
-    }
+  
 
     public async Task<IEnumerable<FuelStationResponseDto>> GetFuelStationsByLocationAsync(GeoLocation location)
     {
@@ -206,8 +181,6 @@ public class FuelStationService : IFuelStationService
         fuelStation.Name = fuelStationDto.Name;
         fuelStation.AddressId = fuelStationDto.AddressId;
         fuelStation.CompanyId = fuelStationDto.CompanyId;
-        fuelStation.FuelTypeId = fuelStationDto.FuelTypeId;
-        fuelStation.FuelSubTypeId = fuelStationDto.FuelSubTypeId;
         fuelStation.UserId = fuelStationDto.UserId;
         fuelStation.OperatorName = fuelStationDto.OperatorName;
         fuelStation.PhoneNumber = fuelStationDto.PhoneNumber;
@@ -221,8 +194,6 @@ public class FuelStationService : IFuelStationService
             Name = fuelStation.Name,
             AddressId = fuelStation.AddressId,
             CompanyId = fuelStation.CompanyId,
-            FuelTypeId = fuelStation.FuelTypeId,
-            FuelSubTypeId = fuelStation.FuelSubTypeId,
             UserId = fuelStation.UserId,
             OperatorName = fuelStation.OperatorName,
             PhoneNumber = fuelStation.PhoneNumber,

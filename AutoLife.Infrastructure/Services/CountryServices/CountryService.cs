@@ -14,9 +14,9 @@ namespace AutoLife.Infrastructure.Services.CountryServices;
 public class CountryService : ICountryService
 {
     private readonly IUnitOfWork<AppDbContext> _unitOfWork;
-    private readonly IGenericRepository<Country> _countryRepository;
+    private readonly IGenericRepository<Country, AppDbContext> _countryRepository;
 
-    public CountryService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Country> countryRepository)
+    public CountryService(IUnitOfWork<AppDbContext> unitOfWork, IGenericRepository<Country, AppDbContext> countryRepository)
     {
         _unitOfWork = unitOfWork;
         _countryRepository = countryRepository;

@@ -14,6 +14,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.IdentityUserId).IsRequired(); // Navigation yo‘q, faqat ID
 
+        builder.HasMany(u => u.PaymentTransactions)
+           .WithOne(pt => pt.User)
+           .HasForeignKey(pt => pt.UserId)
+           .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(u => u.FirstName)
             .HasMaxLength(100)

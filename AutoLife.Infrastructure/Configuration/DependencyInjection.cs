@@ -62,12 +62,15 @@ public static class DependencyInjection
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(config.GetConnectionString("PostgresConnection"));
         });
 
+
+
         // Generic Repository and Unit of Work
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+
 
         // Payment Providers
         services.AddScoped<IPaymentProvider, ClickPaymentProvider>();

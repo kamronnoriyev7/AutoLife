@@ -18,27 +18,25 @@ public class RegionConfiguration : IEntityTypeConfiguration<Region>
         builder.HasKey(r => r.BasaEntityId);
 
         builder.Property(r => r.UzName)
-            .HasMaxLength(200)
+            .HasMaxLength(150)
             .IsRequired();
 
         builder.Property(r => r.RuName)
-            .HasMaxLength(200)
+            .HasMaxLength(150)
             .IsRequired();
 
         builder.Property(r => r.EnName)
-            .HasMaxLength(200)
+            .HasMaxLength(150)
             .IsRequired();
 
-        // Country bilan aloqasi (1 ta Country - ko'p Region)
         builder.HasOne(r => r.Country)
             .WithMany(c => c.Regions)
             .HasForeignKey(r => r.CountryId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
-        // District lar bilan aloqasi
         builder.HasMany(r => r.Districts)
             .WithOne(d => d.Region)
             .HasForeignKey(d => d.RegionId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

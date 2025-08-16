@@ -10,6 +10,5 @@ public interface IFuelPriceService
     Task DeleteFuelPriceAsync(Guid id);
     Task<FuelPrice> GetFuelPriceByIdAsync(Guid id);
     Task<IEnumerable<FuelPrice>> GetAllFuelPricesAsync();
-    Task<IEnumerable<FuelPrice>> GetFuelPricesByStationIdAsync(Guid stationId);
     Task<IEnumerable<FuelPrice>> GetFuelPricesByFuelSubTypeIdAsync(Guid fuelSubTypeId);
 }
