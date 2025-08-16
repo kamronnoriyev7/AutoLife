@@ -30,6 +30,11 @@ public class FuelStationRepository : GenericRepository<FuelStation, AppDbContext
             .ToListAsync(cancellationToken);
     }
 
+    public Task<IQueryable<FuelStation>> GetFuelStationsByLocationAsync(Guid? countryId = null, Guid? regionId = null, Guid? districtId = null, string? street = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<FuelStation?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         if (id == Guid.Empty)
