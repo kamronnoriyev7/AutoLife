@@ -8,9 +8,12 @@ public interface IFuelStationRepository : IGenericRepository<FuelStation, AppDbC
     Task<FuelStation?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<List<FuelStation>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default);
     Task<IQueryable<FuelStation>> GetFuelStationsByLocationAsync(
-        Guid? countryId = null,
-        Guid? regionId = null,
-        Guid? districtId = null,
-        string? street = null, 
-        CancellationToken cancellationToken = default);
+      Guid? countryId = null,
+      Guid? regionId = null,
+      Guid? districtId = null,
+      string? street = null,
+      double? latitude = null,
+      double? longitude = null,
+      double? radiusKm = null,
+      CancellationToken cancellationToken = default);
 }
